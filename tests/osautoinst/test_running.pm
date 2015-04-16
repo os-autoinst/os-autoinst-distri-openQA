@@ -1,9 +1,9 @@
 use strict;
-use base "basetest";
+use base "openQAcoretest";
 use testapi;
 
 sub run {
-    validate_script_output "/usr/share/openqa/script/client jobs state=running", sub { m/^[1-9][0-9]*$/ };
+    validate_script_output "/usr/share/openqa/script/client jobs state=running", sub { m/"running"/ };
     save_screenshot;
     send_key "ctrl-l";
 }

@@ -16,8 +16,8 @@ sub run {
     script_run "systemctl stop packagekit.service";
     save_screenshot;
     send_key "ctrl-l";
-    script_run("zypper -n dup && echo 'worked-dup' > /dev/$serialdev");
-    die "zypper failed" unless wait_serial "worked-dup", 700;
+    script_run("zypper -n up --auto-agree-with-licenses && echo 'worked-up' > /dev/$serialdev");
+    die "zypper failed" unless wait_serial "worked-up", 700;
     save_screenshot;
 }
 

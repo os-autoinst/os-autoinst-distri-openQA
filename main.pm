@@ -13,7 +13,7 @@ sub loadtest($) {
 # subs for test types
 sub load_update_tests(){
     loadtest "update/boot.pm";
-    loadtest "update/zypper_dup.pm";
+    loadtest "update/zypper_up.pm";
     loadtest "update/reboot.pm";
 }
 
