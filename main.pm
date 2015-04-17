@@ -5,6 +5,10 @@ use autotest;
 use needle;
 use File::Find;
 
+my $distri = testapi::get_var("CASEDIR") . '/lib/susedistribution.pm';
+require $distri;
+testapi::set_distribution(susedistribution->new());
+
 sub loadtest($) {
     my ($test) = @_;
     autotest::loadtest(get_var("CASEDIR") . "/tests/$test");
@@ -12,7 +16,6 @@ sub loadtest($) {
 
 # subs for test types
 sub load_update_tests(){
-    loadtest "update/boot.pm";
     loadtest "update/zypper_up.pm";
     loadtest "update/reboot.pm";
 }
@@ -34,7 +37,7 @@ sub load_openQA_tests(){
 }
 
 # load tests in the right order
-load_update_tests_tests();
+load_update_tests();
 load_osautoinst_tests();
 load_openQA_tests();
 

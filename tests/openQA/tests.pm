@@ -3,7 +3,7 @@ use base "openQAcoretest";
 use testapi;
 
 sub run {
-    assert_and_click 'openqa-test-link', 5;
+    assert_and_click 'openqa-test-link';
     assert_screen 'openqa-testscreen', 5
 }
 
