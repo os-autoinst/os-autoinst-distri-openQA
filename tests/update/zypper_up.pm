@@ -1,23 +1,26 @@
 use strict;
 use base "openQAcoretest";
 use testapi;
+use utils;
 
 sub run {
-    assert_screen "openqa-desktop", 500;
+    wait_for_desktop;
     send_key "ctrl-alt-f2";
     assert_screen "inst-console";
     type_string "root\n";
-    assert_screen "password-prompt", 10;
+    assert_screen "password-prompt";
     type_string "1\n";
-    sleep 3;
-    type_string "PS1=\$\n";
-    sleep 1;
+    wait_still_screen(2);
+    type_string "PS1='# '\n";
+    wait_still_screen(1);
     script_run "systemctl mask packagekit.service";
     script_run "systemctl stop packagekit.service";
     save_screenshot;
-    send_key "ctrl-l";
-    script_run("zypper -n up --auto-agree-with-licenses && echo 'worked-up' > /dev/$serialdev");
-    die "zypper failed" unless wait_serial "worked-up", 700;
+    type_string "clear\n";
+    # there is no main openqa repo for openSUSE13.2 anymore but stable
+    type_string "zypper rr openQA\n";
+    type_string "zypper ar http://download.opensuse.org/repositories/devel:/openQA:/stable/openSUSE_13.2 openQA-stable\n";
+    assert_script_run('zypper -n up --auto-agree-with-licenses', timeout => 700, fail_message => 'zypper failed to update packages');
     save_screenshot;
 }
 

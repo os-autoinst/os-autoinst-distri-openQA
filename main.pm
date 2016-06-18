@@ -11,22 +11,22 @@ testapi::set_distribution(susedistribution->new());
 
 sub loadtest($) {
     my ($test) = @_;
-    autotest::loadtest(get_var("CASEDIR") . "/tests/$test");
+    autotest::loadtest("/tests/$test");
 }
 
 # subs for test types
-sub load_update_tests(){
+sub load_update_tests() {
     loadtest "update/zypper_up.pm";
     loadtest "update/reboot.pm";
 }
 
-sub load_osautoinst_tests(){
+sub load_osautoinst_tests() {
     loadtest "osautoinst/worker.pm";
     loadtest "osautoinst/start_test.pm";
     loadtest "osautoinst/test_running.pm";
 }
 
-sub load_openQA_tests(){
+sub load_openQA_tests() {
     loadtest "openQA/dashboard.pm";
     loadtest "openQA/login.pm";
     loadtest "openQA/build_results.pm";

@@ -5,7 +5,7 @@ use testapi;
 sub run {
     validate_script_output "/usr/share/openqa/script/client jobs state=running", sub { m/"running"/ };
     save_screenshot;
-    send_key "ctrl-l";
+    type_string "clear\n";
 }
 
 1;
