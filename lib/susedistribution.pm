@@ -151,7 +151,7 @@ sub ensure_installed {
 sub script_sudo($$) {
     my ($self, $prog, $wait) = @_;
 
-    send_key 'ctrl-l';
+    type_string "clear\n";
     type_string "su -c '$prog'\n";
     if (!get_var("LIVETEST")) {
         assert_screen 'password-prompt';
@@ -168,7 +168,7 @@ sub become_root() {
     type_string "whoami > /dev/$testapi::serialdev\n";
     wait_serial( "root", 2 ) || die "Root prompt not there";
     type_string "cd /tmp\n";
-    send_key('ctrl-l');
+    type_string "clear\n";
 }
 
 1;
