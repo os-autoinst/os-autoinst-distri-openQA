@@ -14,7 +14,7 @@ my %default_password = (
     13.2 => '1',
     Tumbleweed => 'nots3cr3t',
 );
-$testapi::pasword //= $default_password{get_var('VERSION')};
+$testapi::password //= $default_password{get_var('VERSION')};
 
 sub loadtest($) {
     my ($test) = @_;
