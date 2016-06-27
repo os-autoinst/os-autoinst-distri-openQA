@@ -10,11 +10,11 @@ require $distri;
 testapi::set_distribution(susedistribution->new());
 
 $testapi::password //= get_var("PASSWORD");
-my %default_password = (
-    13.2 => '1',
-    Tumbleweed => 'nots3cr3t',
-);
-$testapi::password //= $default_password{get_var('VERSION')};
+if (check_var('VERSION', '13.2')) {
+    # custom password for pregenerated qcow image based on openSUSE 13.2
+    $testapi::password = '1';
+}
+$testapi::password //= 'nots3cr3t';
 
 sub loadtest($) {
     my ($test) = @_;
