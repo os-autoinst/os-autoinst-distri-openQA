@@ -9,7 +9,7 @@ sub run {
     assert_screen "inst-console";
     type_string "root\n";
     assert_screen "password-prompt";
-    type_string $testapi::pasword . "\n";
+    type_string $testapi::password . "\n";
     wait_still_screen(2);
     type_string "PS1='# '\n";
     wait_still_screen(1);

@@ -9,13 +9,22 @@ our @EXPORT = qw/wait_for_desktop/;
 
 sub wait_for_desktop {
     check_screen [qw/boot-menu openqa-desktop/];
-    send_key 'ret' if match_has_tag 'boot-menu';
+    if (match_has_tag('boot-menu')) {
+        send_key 'ret';
+    }
+    assert_screen 'openqa-desktop', 500;
     if (match_has_tag('openqa-desktop-locked')) {
         send_key 'esc';
         wait_still_screen(1);
-        type_string $testapi::pasword . "\n";
+        type_string $testapi::password . "\n";
+        assert_screen 'openqa-desktop';
     }
-    assert_screen "openqa-desktop", 500;
+    elsif (match_has_tag('openqa-desktop-login')) {
+        assert_and_click 'openqa-desktop-login';
+        wait_still_screen(1);
+        type_string $testapi::password . "\n";
+        assert_screen 'openqa-desktop';
+    }
 }
 
 1;
