@@ -11,8 +11,6 @@ sub run {
     assert_screen "password-prompt";
     type_string "1\n";
     wait_still_screen(2);
-    type_string "PS1='# '\n";
-    wait_still_screen(1);
     script_run "systemctl mask packagekit.service";
     script_run "systemctl stop packagekit.service";
     save_screenshot;
