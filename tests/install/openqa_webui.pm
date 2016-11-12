@@ -17,7 +17,7 @@ sub run {
     my $add_repo;
     if (get_required_var('VERSION') =~ /Tumbleweed/) {
         $add_repo = <<'EOF';
-zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Factory openQA
+zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Tumbleweed openQA
 EOF
     }
     elsif (check_var('VERSION', '42.1')) {
