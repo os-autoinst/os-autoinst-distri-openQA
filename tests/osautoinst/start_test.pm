@@ -4,7 +4,7 @@ use testapi;
 
 sub run {
     if (check_var('VERSION', '13.2')) {
-        validate_script_output 'openqa-client isos post ISO=openSUSE-13.2-DVD-x86_64.iso DISTRI=opensuse VERSION=13.2 FLAVOR=DVD ARCH=x86_64 BUILD=0002', sub { m/1/ };
+        assert_script_run 'openqa-client isos post ISO=openSUSE-13.2-DVD-x86_64.iso DISTRI=opensuse VERSION=13.2 FLAVOR=DVD ARCH=x86_64 BUILD=0002';
     }
     else {
         # please forgive the hackiness: using the openQA API but parsing the

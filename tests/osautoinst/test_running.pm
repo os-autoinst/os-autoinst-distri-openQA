@@ -3,7 +3,7 @@ use base "openQAcoretest";
 use testapi;
 
 sub run {
-    validate_script_output "openqa-client jobs state=running", sub { m/"running"/ };
+    assert_script_run 'openqa-client jobs state=running | grep --color -z running';
     save_screenshot;
     type_string "clear\n";
 }
