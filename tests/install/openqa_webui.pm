@@ -15,7 +15,7 @@ sub run {
     script_run('systemctl stop packagekit.service; systemctl mask packagekit.service');
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $add_repo;
-    if (get_required_var('VERSION') =~ /Tumbleweed/) {
+    if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
         $add_repo = <<'EOF';
 zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Tumbleweed openQA
 EOF
