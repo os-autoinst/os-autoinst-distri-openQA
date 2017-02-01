@@ -19,7 +19,7 @@ EOF
     wait_still_screen(1);
     my $worker_setup = <<'EOF';
 systemctl start openqa-worker@1
-systemctl status openqa-worker@1
+systemctl status --no-pager openqa-worker@1
 systemctl enable openqa-worker@1
 EOF
     assert_script_run($_) foreach (split /\n/, $worker_setup);

@@ -44,7 +44,7 @@ sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
 sed "s/#ServerName.*$/ServerName $(hostname)/" /etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
 systemctl restart apache2
 systemctl start openqa-webui
-systemctl status openqa-webui
+systemctl status --no-pager openqa-webui
 systemctl enable openqa-webui
 EOF
     assert_script_run($_) foreach (split /\n/, $configure);

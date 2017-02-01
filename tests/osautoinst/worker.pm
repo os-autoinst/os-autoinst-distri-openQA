@@ -11,7 +11,7 @@ sub run {
     assert_screen 'password-prompt', 10;
     type_string $testapi::password . "\n";
     wait_still_screen(2);
-    assert_script_run 'systemctl status openqa-worker@1 | grep --color -z "active (running)"';
+    assert_script_run 'systemctl status --no-pager openqa-worker@1 | grep --color -z "active (running)"';
     save_screenshot;
     type_string "clear\n";
 }
