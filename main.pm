@@ -51,6 +51,10 @@ sub load_openQA_tests() {
     loadtest "openQA/admin.pm";
 }
 
+sub load_shutdown() {
+    loadtest "shutdown/shutdown.pm";
+}
+
 # load tests in the right order
 if (get_var('UPDATE')) {
     load_update_tests();
@@ -60,5 +64,6 @@ elsif (get_var('INSTALL')) {
 }
 load_osautoinst_tests();
 load_openQA_tests();
+load_shutdown();
 
 1;
