@@ -5,7 +5,12 @@ use testapi;
 sub run {
     wait_screen_change { send_key 'ctrl-alt-f2' };
     type_string "poweroff\n";
-    assert_shutdown;
+    assert_shutdown(300);
+}
+
+sub post_fail_hook {
+    # in case plymouth splash screen on shutdown hides some messages
+    send_key 'esc' if check_screen('plymouth', 0);
 }
 
 1;
