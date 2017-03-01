@@ -66,7 +66,9 @@ systemctl restart apache2 || systemctl status --no-pager apache2
 install -D -m 640 /dev/null /var/lib/openqa/db/db.sqlite
 EOF
     assert_script_run($_, 600) foreach (split /\n/, $configure);
-    script_run 'env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0;
+    script_run('env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0);
+    diag('Wait until the server is responsive');
+    assert_script_run('grep -q "Listening at.*localhost" <(tail -f -n0 nohup.out)', 600);
 }
 
 sub run {
