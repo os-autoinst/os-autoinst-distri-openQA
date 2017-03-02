@@ -18,6 +18,8 @@ job_id=\$(openqa-client --host $openqa_url jobs get version=Tumbleweed scope=rel
 echo "scenario x86_64-memtest-NET: \$job_id"
 sudo -u _openqa-worker touch /var/lib/openqa/factory/iso/.test || (echo "TODO: workaround, _openqa-worker should be able to write factory/iso" && mkdir -p /var/lib/openqa/factory/iso && chmod ugo+rwX /var/lib/openqa/factory/iso)
 ls -la /var/lib/openqa/factory/iso
+echo "Prevent bsc#1027347"
+cd /tmp
 sudo -u _openqa-worker /usr/share/openqa/script/clone_job.pl --from $openqa_url \$job_id
 EOF
         assert_script_run($_) foreach (split /\n/, $cmd);
