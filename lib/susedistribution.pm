@@ -77,22 +77,22 @@ sub init_cmd() {
     ## keyboard cmd vars end
 }
 
-# this needs to move to the distribution
-sub x11_start_program($$$) {
+sub x11_start_program {
     my ($self, $program, $timeout, $options) = @_;
-    send_key "alt-f2";
+    send_key 'alt-f2';
     mouse_hide(1);
-    assert_screen("desktop-runner", $timeout);
+    assert_screen('desktop-runner', $timeout);
     type_string $program;
-    if ( $options->{terminal} ) { send_key "alt-t"; sleep 3; }
-    send_key "ret", 1;
+    if ($options->{terminal}) {
+        wait_screen_change { send_key 'alt-t' };
+    }
+    send_key 'ret';
     # make sure desktop runner executed and closed when have had valid value
     # exec x11_start_program( $program, $timeout, { valid => 1 } );
-    if ( $options->{valid} ) {
-        # check 3 times
-        foreach my $i ( 1..3 ) {
-            last unless check_screen "desktop-runner-border", 2;
-            send_key "ret", 1;
+    if ($options->{valid}) {
+        foreach my $i (1..3) {
+            last unless check_screen 'desktop-runner-border', 2;
+            send_key 'ret';
         }
     }
 }
