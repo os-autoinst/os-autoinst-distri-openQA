@@ -46,6 +46,7 @@ sub load_osautoinst_tests() {
 sub load_openQA_tests() {
     loadtest "openQA/dashboard.pm";
     loadtest "openQA/login.pm";
+    loadtest "openQA/logout.pm";
     return 1 if get_var('INSTALL_ONLY');
     loadtest "openQA/build_results.pm";
     loadtest "openQA/test_live.pm";
