@@ -8,9 +8,16 @@ sub install_from_repos {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $add_repo;
     if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
-        $add_repo = <<'EOF';
+        if (check_var('ARCH', 'ppc64le')) {
+            $add_repo = <<'EOF';
+zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Factory_PowerPC openQA
+EOF
+        }
+        else {
+            $add_repo = <<'EOF';
 zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Tumbleweed openQA
 EOF
+        }
     }
     elsif (check_var('VERSION', '42.1')) {
         $add_repo = <<'EOF';
