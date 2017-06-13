@@ -86,6 +86,7 @@ sub x11_start_program {
     if ($options->{terminal}) {
         wait_screen_change { send_key 'alt-t' };
     }
+    save_screenshot;
     send_key 'ret';
     # make sure desktop runner executed and closed when have had valid value
     # exec x11_start_program( $program, $timeout, { valid => 1 } );
