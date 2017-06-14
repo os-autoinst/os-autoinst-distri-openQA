@@ -25,6 +25,18 @@ zypper ar -f obs://devel:openQA/openSUSE_Leap_42.1 openQA
 zypper ar -f obs://devel:openQA:Leap:42.1/openSUSE_Leap_42.1 openQA-perl-modules
 EOF
     }
+    elsif (check_var('VERSION', '42.2')) {
+        $add_repo = <<'EOF';
+zypper ar -f obs://devel:openQA/openSUSE_Leap_42.2 openQA
+zypper ar -f obs://devel:openQA:Leap:42.2/openSUSE_Leap_42.2 openQA-perl-modules
+EOF
+    }
+    elsif (check_var('VERSION', '42.3')) {
+        $add_repo = <<'EOF';
+zypper ar -f obs://devel:openQA/openSUSE_Leap_42.3 openQA
+zypper ar -f obs://devel:openQA:Leap:42.3/openSUSE_Leap_42.3 openQA-perl-modules
+EOF
+    }
     elsif (check_var('VERSION', 'SLES-12SP1')) {
         $add_repo = <<'EOF';
 zypper ar -f http://download.opensuse.org/repositories/devel:/openQA/SLE_12_SP1/devel:openQA.repo
