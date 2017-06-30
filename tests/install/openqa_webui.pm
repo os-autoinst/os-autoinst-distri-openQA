@@ -10,7 +10,9 @@ sub install_from_repos {
     if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
         if (check_var('ARCH', 'ppc64le')) {
             $add_repo = <<'EOF';
+zypper ref --force
 zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Factory_PowerPC openQA
+zypper lr -d
 EOF
         }
         else {
