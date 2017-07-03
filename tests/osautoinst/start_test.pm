@@ -10,20 +10,12 @@ sub run {
         # please forgive the hackiness: using the openQA API but parsing the
         # human-readable output of 'client' to get the most recent job of
         # 'memtest', a small test scenario on a small iso to clone
-        my $arch = get_var('ARCH');
-        my $ttest;
-        if ($arch, 'ppc64le') {
-           $ttest = 'install_minimalx';
-        }
-        else {
-           $ttest = 'memtest';
-        }
         my $openqa_url = get_var('OPENQA_HOST_URL', 'https://openqa.opensuse.org');
         my $cmd = <<"EOF";
-last_tw_build=\$(openqa-client --host $openqa_url assets get | sed -n 's/^.*name.*Tumbleweed-NET-$arch-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
+last_tw_build=\$(openqa-client --host $openqa_url assets get | sed -n 's/^.*name.*Tumbleweed-NET-x86_64-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
 echo "Last Tumbleweed build on openqa.opensuse.org: \$last_tw_build"
-job_id=\$(openqa-client --host $openqa_url jobs get version=Tumbleweed scope=relevant arch=$arch build=\$last_tw_build flavor=NET | grep -B 8 'name.*$ttest' | sed -n 's/^\\s*\\<id.*=> \\([0-9]\\+\\).*\$/\\1/p')
-echo "scenario $arch-$ttest-NET: \$job_id"
+job_id=\$(openqa-client --host $openqa_url jobs get version=Tumbleweed scope=relevant arch=x86_64 build=\$last_tw_build flavor=NET | grep -B 8 'name.*memtest' | sed -n 's/^\\s*\\<id.*=> \\([0-9]\\+\\).*\$/\\1/p')
+echo "scenario x86_64-memtest-NET: \$job_id"
 sudo -u _openqa-worker touch /var/lib/openqa/factory/iso/.test || (echo "TODO: workaround, _openqa-worker should be able to write factory/iso" && mkdir -p /var/lib/openqa/factory/iso && chmod ugo+rwX /var/lib/openqa/factory/iso)
 ls -la /var/lib/openqa/factory/iso
 echo "Prevent bsc#1027347"
