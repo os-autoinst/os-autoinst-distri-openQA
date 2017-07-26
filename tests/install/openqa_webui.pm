@@ -66,7 +66,7 @@ sub install_from_git {
     my $configure = <<'EOF';
 echo "I am not sure about the next line but Santi told me - imagine a venezualean accent - you want this"
 zypper --non-interactive in -t pattern devel_basis devel_ruby devel_perl devel_python devel_C_C++
-zypper --non-interactive in git-core
+zypper --non-interactive in git-core ruby-devel
 git clone https://github.com/os-autoinst/openQA.git
 curl -L https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm | perl - App::cpanminus
 cpanm local::lib
