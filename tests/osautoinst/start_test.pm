@@ -10,23 +10,17 @@ sub run {
         # please forgive the hackiness: using the openQA API but parsing the
         # human-readable output of 'client' to get the most recent job
         my $arch = get_var('ARCH');
-        my $ttest;
-        my $range;
-        if ($arch eq 'ppc64le') {
-           $ttest = 'install_minimalx';
-           $range = 120;
-        }
-        else {
-           # 'memtest', a small test scenario on a small iso to clone
-           $ttest = 'memtest';
-           $range = 10;
-        }
+        my $ttest = 'minimalx';
         my $openqa_url = get_var('OPENQA_HOST_URL', 'https://openqa.opensuse.org');
         my $cmd = <<"EOF";
 last_tw_build=\$(openqa-client --host $openqa_url assets get | sed -n 's/^.*name.*Tumbleweed-NET-$arch-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
 echo "Last Tumbleweed build on openqa.opensuse.org: \$last_tw_build"
-job_id=\$(openqa-client --host $openqa_url jobs get version=Tumbleweed scope=relevant arch=$arch build=\$last_tw_build flavor=NET | grep -B $range 'name.*$ttest' | grep -A $range group_id | sed -n 's/^\\s*\\<id.*=> \\([0-9]\\+\\).*\$/\\1/p' | sort -n | tail -n 1)
-echo "scenario $arch-$ttest-NET: \$job_id"
+[ ! -z \$last_tw_build ]
+zypper -n in jq
+job_id=\$(openqa-client --host $openqa_url --json-output jobs get version=Tumbleweed scope=relevant arch=$arch build=\$last_tw_build flavor=NET latest=1 | jq '.jobs | .[] | select(.test == "$ttest") | .id')
+echo "Job Id: \$job_id"
+[ ! -z \$job_id  ]
+echo "Scenario: $arch-$ttest-NET: \$job_id"
 sudo -u _openqa-worker touch /var/lib/openqa/factory/iso/.test || (echo "TODO: workaround, _openqa-worker should be able to write factory/iso" && mkdir -p /var/lib/openqa/factory/iso && chmod ugo+rwX /var/lib/openqa/factory/iso)
 ls -la /var/lib/openqa/factory/iso
 echo "Prevent bsc#1027347"
