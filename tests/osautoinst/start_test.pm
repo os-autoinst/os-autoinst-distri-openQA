@@ -10,17 +10,7 @@ sub run {
         # please forgive the hackiness: using the openQA API but parsing the
         # human-readable output of 'client' to get the most recent job
         my $arch = get_var('ARCH');
-        my $ttest;
-        my $range;
-        if ($arch eq 'ppc64le') {
-           $ttest = 'install_minimalx';
-           $range = 120;
-        }
-        else {
-           # 'memtest', a small test scenario on a small iso to clone
-           $ttest = 'memtest';
-           $range = 10;
-        }
+        my $ttest = 'minimalx';
         my $openqa_url = get_var('OPENQA_HOST_URL', 'https://openqa.opensuse.org');
         my $cmd = <<"EOF";
 last_tw_build=\$(openqa-client --host $openqa_url assets get | sed -n 's/^.*name.*Tumbleweed-NET-$arch-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
