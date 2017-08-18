@@ -3,7 +3,7 @@ use base "openQAcoretest";
 use testapi;
 
 sub run {
-    assert_script_run 'openqa-client jobs state=running | grep --color -z running';
+    assert_script_run ' ret=false; for i in {1..5} ; do openqa-client jobs state=running | grep --color -z running && ret=true && break ; sleep 30 ; done ; [ "$ret" = "true" ] ; echo $? ' ,300;
     save_screenshot;
     type_string "clear\n";
 }
