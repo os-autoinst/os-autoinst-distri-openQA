@@ -64,25 +64,19 @@ EOF
 
 sub install_from_git {
     my $configure = <<'EOF';
-echo "I am not sure about the next line but Santi told me - imagine a venezualean accent - you want this"
-zypper --non-interactive in -t pattern devel_basis devel_ruby devel_perl devel_python devel_C_C++
-zypper --non-interactive in git-core ruby-devel
+zypper --non-interactive in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile postgresql-server apache2
+systemctl start postgresql || systemctl status --no-pager postgresql
+su - postgres -c 'createuser root'
+su - postgres -c 'createdb -O root openqa'
 git clone https://github.com/os-autoinst/openQA.git
-curl -L https://raw.githubusercontent.com/miyagawa/cpanminus/master/cpanm | perl - App::cpanminus
-cpanm local::lib
-echo 'eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)"' >> ~/.bashrc
-. ~/.bashrc
-gem install sass
-ln -sf /usr/bin/sass.ruby* /usr/bin/sass
-ln -sf /usr/bin/scss.ruby* /usr/bin/scss
 cd openQA
+for p in $(cpanfile-dump); do echo -n "perl($p) "; done | xargs zypper --non-interactive in -C
 cpanm -nq --installdeps .
-zypper --non-interactive in apache2
 for i in headers proxy proxy_http proxy_wstunnel ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
 sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
 systemctl restart apache2 || systemctl status --no-pager apache2
-install -D -m 640 /dev/null /var/lib/openqa/db/db.sqlite
+mkdir -p /var/lib/openqa/db
 EOF
     assert_script_run($_, 600) foreach (split /\n/, $configure);
     script_run('env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0);
