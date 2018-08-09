@@ -8,7 +8,7 @@ use testapi;
 our @EXPORT = qw/wait_for_desktop ensure_unlocked_desktop/;
 
 sub wait_for_desktop {
-    check_screen [qw/boot-menu openqa-desktop/];
+    assert_screen([qw/boot-menu openqa-desktop/]);
     if (match_has_tag('boot-menu')) {
         send_key 'ret';
     }
