@@ -70,7 +70,7 @@ git clone https://github.com/os-autoinst/openQA.git
 cd openQA
 for p in $(cpanfile-dump); do echo -n "perl($p) "; done | xargs zypper --non-interactive in -C
 cpanm -nq --installdeps .
-for i in headers proxy proxy_http proxy_wstunnel ; do a2enmod $i ; done
+for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
 sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
 systemctl restart apache2 || systemctl status --no-pager apache2
