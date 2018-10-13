@@ -8,15 +8,13 @@ sub install_from_repos {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $add_repo;
     if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
-        if (check_var('ARCH', 'ppc64le')) {
-            $add_repo = <<'EOF';
-zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Factory_PowerPC openQA
-EOF
-        }
-        else {
-            $add_repo = <<'EOF';
-zypper --non-interactive ar -f obs://devel:openQA/openSUSE_Tumbleweed openQA
-EOF
+        my %repo_suffix = (
+            x86_64 => 'Tumbleweed',
+            aarch64 => 'Factory_ARM',
+            ppc64le => 'Factory_PowerPC'
+        );
+        my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
+        $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
         }
     }
     elsif (check_var('VERSION', '42.1')) {
@@ -72,7 +70,7 @@ git clone https://github.com/os-autoinst/openQA.git
 cd openQA
 for p in $(cpanfile-dump); do echo -n "perl($p) "; done | xargs zypper --non-interactive in -C
 cpanm -nq --installdeps .
-for i in headers proxy proxy_http proxy_wstunnel ; do a2enmod $i ; done
+for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
 sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
 systemctl restart apache2 || systemctl status --no-pager apache2
