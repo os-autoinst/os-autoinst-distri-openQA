@@ -3,7 +3,7 @@ use base 'distribution';
 
 # Base class for all openSUSE tests
 
-use testapi qw(send_key %cmd assert_screen check_screen check_var get_var type_password type_string wait_idle wait_serial mouse_hide);
+use testapi qw(send_key %cmd assert_screen check_screen check_var get_var save_screenshot type_password type_string wait_idle wait_serial mouse_hide);
 
 sub init() {
     my ($self) = @_;
