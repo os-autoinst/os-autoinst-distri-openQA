@@ -6,12 +6,13 @@ use testapi;
 sub get_log {
     my ($cmd, $name) = @_;
     my $ret = script_run "$cmd | tee $name";
-    upload_logs($name) if $ret;
+    upload_logs($name) if !$ret;
 }
 
 sub post_fail_hook {
     send_key 'ctrl-alt-f2';  # root console
     if (check_var('OPENQA_FROM_GIT', 1)) {
+        send_key 'ctrl-c'; # Stop current command, if any
         assert_script_run 'cd /root/openQA';
         script_run 'script/client jobs';
         save_screenshot;

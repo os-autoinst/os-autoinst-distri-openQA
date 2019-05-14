@@ -61,7 +61,7 @@ EOF
 
 sub install_from_git {
     my $configure = <<'EOF';
-zypper --non-interactive in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile postgresql-server apache2
+zypper --non-interactive in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2
 systemctl start postgresql || systemctl status --no-pager postgresql
 su - postgres -c 'createuser root'
 su - postgres -c 'createdb -O root openqa'
