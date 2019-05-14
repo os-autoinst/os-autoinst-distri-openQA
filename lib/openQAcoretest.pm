@@ -6,7 +6,7 @@ use testapi;
 sub get_log {
     my ($cmd, $name) = @_;
     my $ret = script_run "$cmd | tee $name";
-    upload_logs($name) if $ret;
+    upload_logs($name) if !$ret;
 }
 
 sub post_fail_hook {
