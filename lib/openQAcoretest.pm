@@ -12,6 +12,7 @@ sub get_log {
 sub post_fail_hook {
     send_key 'ctrl-alt-f2';  # root console
     if (check_var('OPENQA_FROM_GIT', 1)) {
+        send_key 'ctrl-c'; # Stop current command, if any
         assert_script_run 'cd /root/openQA';
         script_run 'script/client jobs';
         save_screenshot;
