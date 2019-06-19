@@ -12,7 +12,7 @@ sub run {
     type_string "clear\n";
     # prepare for next test
     type_string "logout\n";
-    send_key 'ctrl-alt-f7';
+    switch_to_x11;
 }
 
 1;
