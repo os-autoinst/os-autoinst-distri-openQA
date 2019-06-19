@@ -10,7 +10,7 @@ sub run {
 
 sub post_fail_hook {
     # in case plymouth splash screen on shutdown hides some messages
-    send_key 'esc' if check_screen('plymouth', 0);
+    send_key 'esc' if check_screen('plymouth');
 }
 
 1;
