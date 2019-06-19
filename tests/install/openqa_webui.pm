@@ -82,7 +82,7 @@ EOF
 }
 
 sub run {
-    send_key "ctrl-alt-f2";
+    send_key "ctrl-alt-f3";
     assert_screen "inst-console";
     type_string "root\n";
     assert_screen "password-prompt";
