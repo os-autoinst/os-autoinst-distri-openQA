@@ -1,11 +1,11 @@
 package susedistribution;
 use base 'distribution';
 
-# Base class for all openSUSE tests
+# Base class for all test modules
 
 use testapi qw(send_key %cmd assert_screen check_screen check_var get_var save_screenshot type_password type_string wait_idle wait_serial mouse_hide);
 
-sub init() {
+sub init {
     my ($self) = @_;
 
     $self->SUPER::init();
@@ -83,7 +83,7 @@ sub ensure_installed {
     wait_still_screen( 7, 90 );    # wait for install
 }
 
-sub script_sudo($$) {
+sub script_sudo {
     my ($self, $prog, $wait) = @_;
 
     type_string "clear\n";
@@ -96,7 +96,7 @@ sub script_sudo($$) {
     wait_idle $wait;
 }
 
-sub become_root() {
+sub become_root {
     my ($self) = @_;
 
     $self->script_sudo('bash', 1);
