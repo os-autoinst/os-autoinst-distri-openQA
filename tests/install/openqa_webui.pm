@@ -16,18 +16,6 @@ sub install_from_repos {
         my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
         $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
     }
-    elsif (check_var('VERSION', '42.1')) {
-        $add_repo = <<'EOF';
-zypper ar -f obs://devel:openQA/openSUSE_Leap_42.1 openQA
-zypper ar -f obs://devel:openQA:Leap:42.1/openSUSE_Leap_42.1 openQA-perl-modules
-EOF
-    }
-    elsif (check_var('VERSION', '42.2')) {
-        $add_repo = <<'EOF';
-zypper ar -f obs://devel:openQA/openSUSE_Leap_42.2 openQA
-zypper ar -f obs://devel:openQA:Leap:42.2/openSUSE_Leap_42.2 openQA-perl-modules
-EOF
-    }
     elsif (check_var('VERSION', '42.3')) {
         $add_repo = <<'EOF';
 zypper ar -f obs://devel:openQA/openSUSE_Leap_42.3 openQA

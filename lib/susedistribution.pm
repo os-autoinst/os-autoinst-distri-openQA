@@ -1,80 +1,14 @@
 package susedistribution;
 use base 'distribution';
 
-# Base class for all openSUSE tests
+# Base class for all test modules
 
 use testapi qw(send_key %cmd assert_screen check_screen check_var get_var save_screenshot type_password type_string wait_idle wait_serial mouse_hide);
 
-sub init() {
+sub init {
     my ($self) = @_;
 
     $self->SUPER::init();
-    $self->init_cmd();
-}
-
-# this needs to move to the distribution
-sub init_cmd() {
-    my ($self) = @_;
-
-    ## keyboard cmd vars
-    %testapi::cmd = qw(
-      next alt-n
-      xnext alt-n
-      install alt-i
-      update alt-u
-      finish alt-f
-      accept alt-a
-      ok alt-o
-      continue alt-o
-      createpartsetup alt-c
-      custompart alt-c
-      addpart alt-d
-      donotformat alt-d
-      addraid alt-i
-      add alt-a
-      raid0 alt-0
-      raid1 alt-1
-      raid5 alt-5
-      raid6 alt-6
-      raid10 alt-i
-      mountpoint alt-m
-      filesystem alt-s
-      acceptlicense alt-a
-      instdetails alt-d
-      rebootnow alt-n
-      otherrootpw alt-s
-      noautologin alt-a
-      change alt-c
-      software s
-      package p
-      bootloader b
-    );
-
-    if ( check_var('INSTLANG', "de_DE") ) {
-        $testapi::cmd{"next"}            = "alt-w";
-        $testapi::cmd{"createpartsetup"} = "alt-e";
-        $testapi::cmd{"custompart"}      = "alt-b";
-        $testapi::cmd{"addpart"}         = "alt-h";
-        $testapi::cmd{"finish"}          = "alt-b";
-        $testapi::cmd{"accept"}          = "alt-r";
-        $testapi::cmd{"donotformat"}     = "alt-n";
-        $testapi::cmd{"add"}             = "alt-h";
-
-        #	$testapi::cmd{"raid6"}="alt-d"; 11.2 only
-        $testapi::cmd{"raid10"}      = "alt-r";
-        $testapi::cmd{"mountpoint"}  = "alt-e";
-        $testapi::cmd{"rebootnow"}   = "alt-j";
-        $testapi::cmd{"otherrootpw"} = "alt-e";
-        $testapi::cmd{"change"}      = "alt-n";
-        $testapi::cmd{"software"}    = "w";
-    }
-    if ( check_var('INSTLANG', "es_ES") ) {
-        $testapi::cmd{"next"} = "alt-i";
-    }
-    if ( check_var('INSTLANG', "fr_FR") ) {
-        $testapi::cmd{"next"} = "alt-s";
-    }
-    ## keyboard cmd vars end
 }
 
 sub x11_start_program {
@@ -149,7 +83,7 @@ sub ensure_installed {
     wait_still_screen( 7, 90 );    # wait for install
 }
 
-sub script_sudo($$) {
+sub script_sudo {
     my ($self, $prog, $wait) = @_;
 
     type_string "clear\n";
@@ -162,7 +96,7 @@ sub script_sudo($$) {
     wait_idle $wait;
 }
 
-sub become_root() {
+sub become_root {
     my ($self) = @_;
 
     $self->script_sudo('bash', 1);

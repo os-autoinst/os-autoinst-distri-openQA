@@ -10,10 +10,6 @@ require $distri;
 testapi::set_distribution(susedistribution->new());
 
 $testapi::password //= get_var("PASSWORD");
-if (check_var('VERSION', '13.2')) {
-    # custom password for pregenerated qcow image based on openSUSE 13.2
-    $testapi::password = '1';
-}
 $testapi::password //= 'nots3cr3t';
 
 sub loadtest($) {
