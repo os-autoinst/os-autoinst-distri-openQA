@@ -66,7 +66,7 @@ EOF
     assert_script_run($_, 600) foreach (split /\n/, $configure);
     script_run('env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0);
     diag('Wait until the server is responsive');
-    assert_script_run('while ! [ -f nohup.out ]; do sleep 1 ; done && grep -q "Listening at.*localhost" <(tail -f -n0 nohup.out)', 600);
+    assert_script_run('while ! [ -f nohup.out ]; do sleep 1 ; done && grep -qP "Listening at.*(127.0.0.1|localhost)" <(tail -f -n0 nohup.out) ', 600);
 }
 
 sub run {
