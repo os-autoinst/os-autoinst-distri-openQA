@@ -34,17 +34,14 @@ EOF
     assert_script_run($_) foreach (split /\n/, $add_repo);
     assert_script_run('zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA', 600);
     my $configure = <<'EOF';
-for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
-sed -i -e 's/^.*httpsonly.*$/httpsonly = 0/g' /etc/openqa/openqa.ini
+/usr/share/openqa/script/configure-web-proxy
 sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
-sed "s/#ServerName.*$/ServerName $(hostname)/" /etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
 systemctl restart apache2
-systemctl start openqa-webui
+systemctl enable --now openqa-webui
 systemctl status --no-pager openqa-webui
-systemctl enable openqa-webui
 EOF
     assert_script_run($_) foreach (split /\n/, $configure);
-    script_run('systemctl unmask packagekit.service; systemctl start packagekit.service');
+    script_run('systemctl unmask packagekit; systemctl start packagekit');
 }
 
 sub install_from_git {
