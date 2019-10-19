@@ -9,7 +9,7 @@ sub install_from_repos {
     my $add_repo;
     if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
         my %repo_suffix = (
-            x86_64 => 'Tumbleweed',
+            x86_64  => 'Tumbleweed',
             aarch64 => 'Factory_ARM',
             ppc64le => 'Factory_PowerPC'
         );

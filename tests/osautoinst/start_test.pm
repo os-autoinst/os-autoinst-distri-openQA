@@ -5,10 +5,10 @@ use testapi;
 sub run {
     # please forgive the hackiness: using the openQA API but parsing the
     # human-readable output of 'client' to get the most recent job
-    my $arch = get_var('ARCH');
-    my $ttest = 'minimalx';
+    my $arch       = get_var('ARCH');
+    my $ttest      = 'minimalx';
     my $openqa_url = get_var('OPENQA_HOST_URL', 'https://openqa.opensuse.org');
-    my $cmd = <<"EOF";
+    my $cmd        = <<"EOF";
 last_tw_build=\$(openqa-client --host $openqa_url assets get | sed -n 's/^.*name.*Tumbleweed-NET-$arch-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
 echo "Last Tumbleweed build on openqa.opensuse.org: \$last_tw_build"
 [ ! -z \$last_tw_build ]

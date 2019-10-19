@@ -3,7 +3,7 @@ use base "openQAcoretest";
 use testapi;
 
 sub run {
-    assert_script_run ' ret=false; for i in {1..5} ; do openqa-client jobs state=running | grep --color -z running && ret=true && break ; sleep 30 ; done ; [ "$ret" = "true" ] ; echo $? ' ,300;
+    assert_script_run ' ret=false; for i in {1..5} ; do openqa-client jobs state=running | grep --color -z running && ret=true && break ; sleep 30 ; done ; [ "$ret" = "true" ] ; echo $? ', 300;
     save_screenshot;
     type_string "clear\n";
 }
@@ -20,7 +20,7 @@ sub post_fail_hook {
 sub test_flags {
     # continue with other tests as we could use their information for
     # debugging in case of failures.
-    return { important => 1 };
+    return {important => 1};
 }
 
 1;
