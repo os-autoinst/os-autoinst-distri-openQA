@@ -25,7 +25,7 @@ sub x11_start_program {
     # make sure desktop runner executed and closed when have had valid value
     # exec x11_start_program( $program, $timeout, { valid => 1 } );
     if ($options->{valid}) {
-        foreach my $i (1..3) {
+        foreach my $i (1 .. 3) {
             last unless check_screen 'desktop-runner-border', 2;
             send_key 'ret';
         }
@@ -36,7 +36,7 @@ sub x11_start_program {
 sub ensure_installed {
     my ($self, @pkglist) = @_;
     my $timeout;
-    if ( $pkglist[-1] =~ /^[0-9]+$/ ) {
+    if ($pkglist[-1] =~ /^[0-9]+$/) {
         $timeout = $pkglist[-1];
         pop @pkglist;
     }
@@ -50,37 +50,37 @@ sub ensure_installed {
     my @tags = qw/Policykit Policykit-behind-window PolicyKit-retry pkcon-proceed-prompt pkcon-succeeded/;
     while (1) {
         my $ret = assert_screen(\@tags, $timeout);
-        if ( $ret->{needle}->has_tag('Policykit') ||
-             $ret->{needle}->has_tag('PolicyKit-retry')) {
+        if ($ret->{needle}->has_tag('Policykit') ||
+            $ret->{needle}->has_tag('PolicyKit-retry')) {
             type_password;
-            send_key( "ret", 1 );
+            send_key("ret", 1);
             @tags = grep { $_ ne 'Policykit' } @tags;
             @tags = grep { $_ ne 'Policykit-behind-window' } @tags;
-            if ( $ret->{needle}->has_tag('PolicyKit-retry')) {
+            if ($ret->{needle}->has_tag('PolicyKit-retry')) {
                 # Only a single retry is acceptable
                 @tags = grep { $_ ne 'PolicyKit-retry' } @tags;
             }
             next;
         }
-        if ( $ret->{needle}->has_tag('Policykit-behind-window') ) {
+        if ($ret->{needle}->has_tag('Policykit-behind-window')) {
             send_key("alt-tab");
             sleep 3;
             next;
         }
-        if ( $ret->{needle}->has_tag('pkcon-proceed-prompt') ) {
+        if ($ret->{needle}->has_tag('pkcon-proceed-prompt')) {
             send_key("y");
             send_key("ret");
             @tags = grep { $_ ne 'pkcon-proceed-prompt' } @tags;
             next;
         }
-        if ( $ret->{needle}->has_tag('pkcon-succeeded') ) {
+        if ($ret->{needle}->has_tag('pkcon-succeeded')) {
             send_key("alt-f4");    # close xterm
             return;
         }
     }
 
     if ($password) { type_password; send_key("ret", 1); }
-    wait_still_screen( 7, 90 );    # wait for install
+    wait_still_screen(7, 90);      # wait for install
 }
 
 sub script_sudo {
@@ -101,7 +101,7 @@ sub become_root {
 
     $self->script_sudo('bash', 1);
     type_string "whoami > /dev/$testapi::serialdev\n";
-    wait_serial( "root", 2 ) || die "Root prompt not there";
+    wait_serial("root", 2) || die "Root prompt not there";
     type_string "cd /tmp\n";
     type_string "clear\n";
 }
