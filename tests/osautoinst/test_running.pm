@@ -13,7 +13,7 @@ sub post_fail_hook {
     $self->SUPER::post_fail_hook;
     script_run 'lsmod | grep kvm';
     save_screenshot;
-    $self->get_log('grep --color -z -E "(vmx|svm)" /proc/cpuinfo' => 'cpuinfo');
+    get_log('grep --color -z -E "(vmx|svm)" /proc/cpuinfo' => 'cpuinfo');
     assert_script_run 'grep --color -z -E "(vmx|svm)" /proc/cpuinfo', fail_message => 'Machine does not support nested virtualization, please enable in worker host';
 }
 
