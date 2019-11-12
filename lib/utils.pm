@@ -62,14 +62,11 @@ sub ensure_unlocked_desktop {
                 # responsiveness.
                 # open run command prompt (if screen isn't locked)
                 mouse_hide(1);
-                send_key 'alt-f2';
-                if (check_screen 'desktop-runner') {
-                    send_key 'esc';
-                    assert_screen 'generic-desktop';
-                }
-                else {
-                    next;    # most probably screen is locked
-                }
+                wait_screen_change { send_key 'alt-f2' };
+                assert_screen [qw(desktop-runner screenlock)];
+                next if match_has_tag 'screenlock';
+                send_key 'esc';
+                assert_screen 'generic-desktop';
             }
             last;            # desktop is unlocked, mission accomplished
         }
