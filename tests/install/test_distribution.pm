@@ -9,6 +9,7 @@ sub run {
     diag('initialize working copy of openSUSE tests distribution with correct user');
     assert_script_run('username=bernhard email=bernhard@susetest /usr/share/openqa/script/fetchneedles', 3600);
     save_screenshot;
+    assert_script_run('zypper --no-refresh -n in os-autoinst-distri-opensuse-deps', 600);
     type_string "clear\n";
     # prepare for next test
     type_string "logout\n";
