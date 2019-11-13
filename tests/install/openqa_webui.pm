@@ -39,6 +39,8 @@ sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
 systemctl restart apache2
 systemctl enable --now openqa-webui
 systemctl status --no-pager openqa-webui
+systemctl enable --now openqa-scheduler
+systemctl status --no-pager openqa-scheduler
 EOF
     assert_script_run($_) foreach (split /\n/, $configure);
     script_run('systemctl unmask packagekit; systemctl start packagekit');
