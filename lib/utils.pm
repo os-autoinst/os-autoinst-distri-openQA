@@ -68,14 +68,14 @@ sub ensure_unlocked_desktop {
                 send_key 'esc';
                 assert_screen 'generic-desktop';
             }
-            last;            # desktop is unlocked, mission accomplished
+            last;    # desktop is unlocked, mission accomplished
         }
         if (match_has_tag 'screenlock') {
             wait_screen_change {
                 send_key 'esc';    # end screenlock
             };
         }
-        wait_still_screen 2;       # slow down loop
+        wait_still_screen 2;                                                                              # slow down loop
         die 'ensure_unlocked_desktop repeated too much. Check for X-server crash.' if ($counter eq 1);    # die loop when generic-desktop not matched
     }
 }
