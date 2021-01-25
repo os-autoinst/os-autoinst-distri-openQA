@@ -68,6 +68,11 @@ EOF
     assert_script_run('while ! [ -f nohup.out ]; do sleep 1 ; done && grep -qP "Listening at.*(127.0.0.1|localhost)" <(tail -f -n0 nohup.out) ', 600);
 }
 
+sub install_containers {
+    assert_script_run("zypper --non-interactive install docker git", timeout => 300);
+    assert_script_run("systemctl start docker");
+}
+
 sub run {
     send_key "ctrl-alt-f3";
     assert_screen "inst-console";
@@ -78,7 +83,12 @@ sub run {
     diag('Ensure packagekit is not interfering with zypper calls');
     script_run('systemctl stop packagekit.service; systemctl mask packagekit.service');
     if (check_var('OPENQA_FROM_GIT', 1)) {
-        install_from_git;
+        if (get_var('OPENQA_CONTAINERS')) {
+            install_containers;
+        }
+        else {
+            install_from_git;
+        }
     }
     else {
         install_from_repos;
