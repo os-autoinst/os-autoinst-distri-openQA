@@ -45,6 +45,7 @@ sub load_openQA_tests() {
       loadtest "containers/setup_env.pm";
       loadtest "containers/multiple_container_webui.pm";
       loadtest "containers/single_container_webui.pm";
+      loadtest "containers/worker.pm";
     }
     else {
       loadtest "openQA/dashboard.pm";
