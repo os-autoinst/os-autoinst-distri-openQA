@@ -13,7 +13,7 @@ sub test_component {
 
 sub run {
    my ($self) = @_;
-   my $volumes = "-v \"/root/data/factory:/data/factory\" -v \"/root/data/tests:/data/tests\" -v \"/root/openQA/container/webui/conf:/data/conf:ro\"";
+   my $volumes = '-v "/root/data/factory:/data/factory" -v "/root/data/tests:/data/tests" -v "/root/openQA/container/webui/conf:/data/conf:ro"';
 
    test_component("webui", 9526, $volumes);
    test_component("websockets", 9527, $volumes);
