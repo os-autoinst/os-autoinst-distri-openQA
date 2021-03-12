@@ -97,6 +97,8 @@ sub wait_for_container_log {
         last if ($timeout == 0);
     }
 
+    system("$cmd logs $container") if ($timeout == 0);
+
     assert_script_run("$cmd logs $container 2>&1 | grep \"$text\" >/dev/null");
 }
 
