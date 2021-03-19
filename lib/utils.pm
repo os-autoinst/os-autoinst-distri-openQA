@@ -82,14 +82,23 @@ sub ensure_unlocked_desktop {
 }
 
 # Waits until a text ($text) is found in the container logs.
-# Controlled by a timeout (30s)
+# Controlled by a timeout (50s)
 # Params:
 # - $container: The container name or ID
 # - $text: The text to search in the logs
 # - $cmd: The containers runner (docker, podman,...)
+# - $timeout: Time in seconds until this fails
+#
 sub wait_for_container_log {
-    my ($container, $text, $cmd) = @_;
-    validate_script_output "$cmd logs $container", qr/$text/;
+    my ($container, $text, $cmd, $timeout) = @_;
+    $timeout //= 50;
+    while ($timeout > 0) {
+        my $output = script_output("$cmd logs $container 2>&1");
+        return if ($output =~ /$text/);
+        $timeout--;
+        sleep 1;
+    }
+    validate_script_output("$cmd logs $container 2>&1", qr/$text/);
 }
 
 1;
