@@ -40,23 +40,11 @@ sub load_osautoinst_tests() {
 }
 
 sub load_openQA_tests() {
-    if (get_var("OPENQA_CONTAINERS")) {
-      loadtest "containers/build.pm";
-      loadtest "containers/setup_env.pm";
-      loadtest "containers/multiple_container_webui.pm";
-      loadtest "containers/single_container_webui.pm";
-      loadtest "containers/worker.pm";
-    }
-    else {
-      loadtest "openQA/dashboard.pm";
-      loadtest "openQA/login.pm";
-      return 1 if get_var('INSTALL_ONLY');
-      loadtest "openQA/build_results.pm";
-      loadtest "openQA/test_live.pm";
-      loadtest "openQA/test_results.pm";
-      loadtest "openQA/tests.pm";
-      loadtest "openQA/admin.pm";
-    }
+    loadtest "containers/build.pm";
+    loadtest "containers/setup_env.pm";
+    loadtest "containers/multiple_container_webui.pm";
+    loadtest "containers/single_container_webui.pm";
+    loadtest "containers/worker.pm";
 }
 
 sub load_shutdown() {
