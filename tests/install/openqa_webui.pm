@@ -69,7 +69,7 @@ EOF
 }
 
 sub install_containers {
-    assert_script_run("zypper --non-interactive install docker git", timeout => 300);
+    assert_script_run("zypper --non-interactive install docker git", timeout => 600);
     assert_script_run("systemctl start docker");
 }
 
