@@ -6,7 +6,8 @@ sub run {
   my ($self) = @_;
   my $volumes = '-v "/root/data/factory:/data/factory" -v "/root/data/tests:/data/tests" -v "/root/openQA/container/webui/conf:/data/conf:ro"';
   my $certificates = '-v "/root/server.crt:/etc/apache2/ssl.crt/server.crt" -v "/root/server.crt:/etc/apache2/ssl.crt/ca.crt" -v "/root/server.key:/etc/apache2/ssl.key/server.key"';
-
+  
+  assert_script_run("mkdir -p -m a=rwx /root/data/{factory,tests}");
   assert_script_run("openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -subj '/CN=www.mydom.com/O=My Company Name LTD./C=DE' -out server.crt -keyout server.key");
 
   assert_script_run("docker run -d --network testing $volumes $certificates -p 80:80 --name openqa_webui openqa_webui");
