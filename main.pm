@@ -59,6 +59,10 @@ sub load_openQA_tests() {
     }
 }
 
+sub load_python_tests() {
+    loadtest "openQA/search.py";
+}
+
 sub load_shutdown() {
     loadtest "shutdown/shutdown.pm";
 }
@@ -73,6 +77,7 @@ elsif (get_var('INSTALL')) {
 # testing from git only tests webui so far
 load_osautoinst_tests() unless check_var('OPENQA_FROM_GIT', 1);
 load_openQA_tests();
+load_python_tests() if get_var('PYTHON');
 load_shutdown();
 
 1;
