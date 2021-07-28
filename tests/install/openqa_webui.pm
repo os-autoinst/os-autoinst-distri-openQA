@@ -47,6 +47,7 @@ EOF
 }
 
 sub install_from_git {
+    # A retry is required if the CDN is not reachable during the generation of packed assets.
     my $configure = <<'EOF';
 zypper --non-interactive in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2
 systemctl start postgresql || systemctl status --no-pager postgresql
@@ -56,6 +57,7 @@ git clone https://github.com/os-autoinst/openQA.git
 cd openQA
 for p in $(cpanfile-dump); do echo -n "perl($p) "; done | xargs zypper --non-interactive in -C
 cpanm -nq --installdeps .
+tools/generate-packed-assets || (sleep 1; tools/generate-packed-assets || exit 1) || (sleep 1; tools/generate-packed-assets || exit 1)
 for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
 sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
