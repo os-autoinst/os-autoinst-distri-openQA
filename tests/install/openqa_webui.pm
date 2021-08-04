@@ -75,7 +75,7 @@ sub install_containers {
 
 sub run {
     send_key "ctrl-alt-f3";
-    assert_screen "inst-console";
+    assert_screen("inst-console", timeout => 60);
     type_string "root\n";
     assert_screen "password-prompt";
     type_string $testapi::password . "\n";
