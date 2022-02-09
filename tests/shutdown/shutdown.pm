@@ -3,9 +3,8 @@ use base "openQAcoretest";
 use testapi;
 
 sub run {
-    send_key('ctrl-alt-f3', wait_scren_change => 1) ;
-    assert_screen("root-console");
-    enter_cmd "poweroff";
+    wait_screen_change { send_key 'ctrl-alt-f3' };
+    type_string "poweroff\n";
     assert_shutdown(300);
 }
 
