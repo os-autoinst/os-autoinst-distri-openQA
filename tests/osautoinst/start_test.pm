@@ -1,6 +1,7 @@
 use strict;
 use base "openQAcoretest";
 use testapi;
+use utils;
 
 sub run {
     # please forgive the hackiness: using the openQA API but parsing the
@@ -21,7 +22,7 @@ openqa-clone-job --from $openqa_url \$job_id
 EOF
     assert_script_run($_) foreach (split /\n/, $cmd);
     save_screenshot;
-    type_string "clear\n";
+    clear_root_console;
 }
 
 1;

@@ -88,7 +88,7 @@ sub run {
         install_from_repos;
     }
     save_screenshot;
-    type_string "clear\n";
+    clear_root_console;
 }
 
 1;

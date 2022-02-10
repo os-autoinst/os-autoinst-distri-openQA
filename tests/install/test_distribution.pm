@@ -11,9 +11,9 @@ sub run {
     save_screenshot;
     assert_script_run('zypper -n ref -f',                              60);
     assert_script_run('zypper -n in os-autoinst-distri-opensuse-deps', 600);
-    type_string "clear\n";
+    clear_root_console;
     # prepare for next test
-    type_string "logout\n";
+    enter_cmd "logout";
     switch_to_x11;
 }
 

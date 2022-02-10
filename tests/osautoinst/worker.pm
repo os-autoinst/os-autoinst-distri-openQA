@@ -13,7 +13,7 @@ sub run {
     wait_still_screen(2);
     assert_script_run 'systemctl status --no-pager openqa-worker@1 | grep --color -z "active (running)"';
     save_screenshot;
-    type_string "clear\n";
+    clear_root_console;
 }
 
 1;

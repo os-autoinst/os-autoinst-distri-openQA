@@ -8,6 +8,7 @@ sub run {
 
   assert_script_run("docker run -d --network testing $volumes --name openqa_worker openqa_worker");
   wait_for_container_log("openqa_worker", "API key and secret are needed", "docker");
+  clear_root_console;
 }
 
 1;
