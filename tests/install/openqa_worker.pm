@@ -25,7 +25,7 @@ systemctl enable openqa-worker@1
 EOF
     assert_script_run($_) foreach (split /\n/, $worker_setup);
     save_screenshot;
-    type_string "clear\n";
+    clear_root_console;
 }
 
 1;

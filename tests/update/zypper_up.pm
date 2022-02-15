@@ -13,7 +13,7 @@ sub run {
     wait_still_screen(2);
     script_run 'systemctl mask --now packagekit';
     save_screenshot;
-    type_string "clear\n";
+    clear_root_console;
     assert_script_run('zypper -n up --auto-agree-with-licenses', timeout => 700, fail_message => 'zypper failed to update packages');
     save_screenshot;
 }
