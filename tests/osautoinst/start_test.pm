@@ -18,9 +18,9 @@ job_id=\$(openqa-client --host $openqa_url --json-output jobs get version=Tumble
 echo "Job Id: \$job_id"
 [ ! -z \$job_id  ]
 echo "Scenario: $arch-$ttest-NET: \$job_id"
-openqa-clone-job --from $openqa_url \$job_id
 EOF
     assert_script_run($_) foreach (split /\n/, $cmd);
+    assert_script_run("openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 120);
     save_screenshot;
     clear_root_console;
 }
