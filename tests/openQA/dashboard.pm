@@ -3,10 +3,12 @@ use base "openQAcoretest";
 use testapi;
 use utils;
 
+use OpenQA::Wheel::Launcher 'start_gui_program';
+
 sub run {
     switch_to_x11;
     ensure_unlocked_desktop();
-    x11_start_program("firefox http://localhost", 60, {valid => 1});
+    start_gui_program("firefox http://localhost", 60, valid => 1);
     # starting from git might take a bit longer to get and generated assets
     # workaround for poo#19798, basically doubles the timeout
     if ((check_screen 'openqa-dashboard', 180) == undef) {
