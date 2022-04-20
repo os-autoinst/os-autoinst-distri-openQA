@@ -16,7 +16,7 @@ sub install_from_repos {
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
-    assert_script_run('zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA', 600);
+    assert_script_run('zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA-local-db', 600);
     my $configure = <<'EOF';
 /usr/share/openqa/script/configure-web-proxy
 sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
