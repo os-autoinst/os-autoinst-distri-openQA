@@ -7,26 +7,16 @@ use utils;
 sub install_from_repos {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $add_repo;
-    if (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
-        my %repo_suffix = (
-            x86_64  => 'Tumbleweed',
-            aarch64 => 'Factory_ARM',
-            ppc64le => 'Factory_PowerPC'
-        );
-        my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
-        $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
-    }
-    elsif (check_var('VERSION', 'SLES-12SP5')) {
-        $add_repo = <<'EOF';
-zypper ar -f http://download.opensuse.org/repositories/devel:/openQA/SLE_12_SP5/devel:openQA.repo
-zypper ar -f http://download.opensuse.org/repositories/devel:/openQA:/SLE-12/SLE_12_SP5/devel:openQA:SLE-12.repo
-EOF
-    }
-    else {
-        die "Needs implementation for other versions";
-    }
+    die 'Needs implementation for other versions' unless get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
+    my %repo_suffix = (
+        x86_64  => 'Tumbleweed',
+        aarch64 => 'Factory_ARM',
+        ppc64le => 'Factory_PowerPC'
+    );
+    my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
+    $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
-    assert_script_run('zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA', 600);
+    assert_script_run('zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA-local-db', 600);
     my $configure = <<'EOF';
 /usr/share/openqa/script/configure-web-proxy
 sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
