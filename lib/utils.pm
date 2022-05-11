@@ -6,7 +6,7 @@ use strict;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log);
+our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log script_retry);
 
 sub clear_root_console {
     enter_cmd('clear');
@@ -104,6 +104,57 @@ sub wait_for_container_log {
         sleep 1;
     }
     validate_script_output("$cmd logs $container 2>&1", qr/$text/);
+}
+
+=head2 script_retry
+
+ script_retry($cmd, [expect => $expect], [retry => $retry], [delay => $delay], [timeout => $timeout], [die => $die]);
+
+Repeat command until expected result or timeout.
+
+C<$expect> refers to the expected command exit code and defaults to C<0>.
+
+C<$retry> refers to the number of retries and defaults to C<10>.
+
+C<$delay> is the time between retries and defaults to C<30>.
+
+The command must return within C<$timeout> seconds (default: 25).
+
+If the command doesn't return C<$expect> after C<$retry> retries,
+this function will die, if C<$die> is set.
+
+Example:
+
+ script_retry('ping -c1 -W1 machine', retry => 5);
+
+=cut
+sub script_retry {
+    my ($cmd, %args) = @_;
+    my $ecode = $args{expect} // 0;
+    my $retry = $args{retry} // 10;
+    my $delay = $args{delay} // 30;
+    my $timeout = $args{timeout} // 30;
+    my $die = $args{die} // 1;
+
+    my $ret;
+
+    my $exec = "timeout $timeout $cmd";
+    # Exclamation mark needs to be moved before the timeout command, if present
+    if (substr($cmd, 0, 1) eq "!") {
+        $cmd = substr($cmd, 1);
+        $cmd =~ s/^\s+//;    # left trim spaces after the exclamation mark
+        $exec = "! timeout $timeout $cmd";
+    }
+    for (1 .. $retry) {
+        # timeout for script_run must be larger than for the 'timeout ...' command
+        $ret = script_run($exec, ($timeout + 3));
+        last if defined($ret) && $ret == $ecode;
+
+        die("Waiting for Godot: $cmd") if $retry == $_ && $die == 1;
+        sleep $delay if ($delay > 0);
+    }
+
+    return $ret;
 }
 
 1;
