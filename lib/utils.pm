@@ -96,6 +96,7 @@ sub ensure_unlocked_desktop {
 #
 sub wait_for_container_log {
     my ($container, $text, $cmd, $timeout) = @_;
+    $cmd //= get_var('CRE', 'podman');
     $timeout //= 50;
     while ($timeout > 0) {
         my $output = script_output("$cmd logs $container 2>&1");
