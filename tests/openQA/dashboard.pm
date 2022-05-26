@@ -4,6 +4,7 @@ use testapi;
 use utils;
 
 sub run {
+    prepare_firefox_autoconfig;
     switch_to_x11;
     ensure_unlocked_desktop();
     x11_start_program("firefox http://localhost", 60, {valid => 1});

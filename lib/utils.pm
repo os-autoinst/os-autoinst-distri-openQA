@@ -6,7 +6,7 @@ use strict;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log);
+our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig);
 
 sub clear_root_console {
     enter_cmd('clear');
@@ -104,6 +104,26 @@ sub wait_for_container_log {
         sleep 1;
     }
     validate_script_output("$cmd logs $container 2>&1", qr/$text/);
+}
+
+# Use AutoConfig file for firefox to predefine some user values
+# https://support.mozilla.org/en-US/kb/customizing-firefox-using-autoconfig
+sub prepare_firefox_autoconfig {
+    # Enable AutoConfig by pointing to a cfg file
+    type_string(q{cat <<EOF > $(rpm --eval %_libdir)/firefox/defaults/pref/autoconfig.js
+pref("general.config.filename", "firefox.cfg");
+pref("general.config.obscure_value", 0);
+EOF
+});
+    # Create AutoConfig cfg file
+    type_string(q{cat <<EOF > $(rpm --eval %_libdir)/firefox/firefox.cfg
+// Mandatory comment
+// https://firefox-source-docs.mozilla.org/browser/components/newtab/content-src/asrouter/docs/first-run.html
+pref("browser.aboutwelcome.enabled", false);
+pref("browser.startup.upgradeDialog.enabled", false);
+pref("privacy.restrict3rdpartystorage.rollout.enabledByDefault", false);
+EOF
+});
 }
 
 1;
