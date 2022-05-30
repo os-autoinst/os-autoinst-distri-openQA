@@ -3,6 +3,13 @@ use base "basetest";
 use testapi;
 
 
+sub new {
+    my ($class, $args) = @_;
+    my $self = $class->SUPER::new($args);
+    $self->{cre} = get_var('CRE', 'podman');
+    return $self;
+}
+
 sub get_log {
     my ($cmd, $name) = @_;
     my $ret = script_run "$cmd | tee $name";
