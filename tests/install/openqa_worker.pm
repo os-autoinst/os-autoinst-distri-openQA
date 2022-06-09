@@ -5,9 +5,9 @@ use utils;
 
 sub run {
     diag('worker setup');
-    assert_script_run('zypper -n --gpg-auto-import-keys ref -f',           60);
-    assert_script_run('zypper --no-cd --non-interactive in os-autoinst',   600);
-    assert_script_run('zypper --no-cd --non-interactive in openQA-worker', 600);
+    assert_script_run('for i in {1..3}; do zypper -n --gpg-auto-import-keys ref -f && break; done', 300);
+    assert_script_run('for i in {1..3}; do zypper --no-cd --non-interactive in os-autoinst && break; done', 600);
+    assert_script_run('for i in {1..3}; do zypper --no-cd --non-interactive in openQA-worker && break; done', 600);
     diag('Login once with fake authentication on openqa webUI to actually create preconfigured API keys for worker authentication');
     assert_script_run('curl http://localhost/login');
     diag('adding temporary, preconfigured API keys to worker config');
