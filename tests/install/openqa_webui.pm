@@ -27,7 +27,6 @@ systemctl enable --now openqa-scheduler
 systemctl status --no-pager openqa-scheduler
 EOF
     assert_script_run($_) foreach (split /\n/, $configure);
-    script_run('systemctl unmask packagekit; systemctl start packagekit');
 }
 
 sub install_from_git {
@@ -65,7 +64,7 @@ sub run {
     type_string $testapi::password . "\n";
     wait_still_screen(2);
     diag('Ensure packagekit is not interfering with zypper calls');
-    script_run('systemctl stop packagekit.service; systemctl mask packagekit.service');
+    assert_script_run('systemctl mask --now packagekit');
     if (check_var('OPENQA_FROM_GIT', 1)) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
