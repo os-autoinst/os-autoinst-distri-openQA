@@ -14,9 +14,9 @@ sub install_from_repos {
         ppc64le => 'Factory_PowerPC'
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
-    $add_repo = "zypper --non-interactive ar -f obs://devel:openQA/$repo openQA";
+    $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
-    assert_script_run('for i in {1..3}; do zypper --no-cd --non-interactive --gpg-auto-import-keys in openQA-local-db && break; done', 600);
+    assert_script_run('for i in {1..3}; do zypper --no-cd -n --gpg-auto-import-keys in openQA-local-db && break || sleep 30; false; done', 600);
     my $configure = <<'EOF';
 /usr/share/openqa/script/configure-web-proxy
 sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
@@ -27,18 +27,17 @@ systemctl enable --now openqa-scheduler
 systemctl status --no-pager openqa-scheduler
 EOF
     assert_script_run($_) foreach (split /\n/, $configure);
-    script_run('systemctl unmask packagekit; systemctl start packagekit');
 }
 
 sub install_from_git {
     my $configure = <<'EOF';
-for i in {1..3; do zypper --non-interactive in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2 && break; done
+for i in {1..3}; do zypper -n in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2 && break || sleep 30; false; done
 systemctl start postgresql || systemctl status --no-pager postgresql
 su - postgres -c 'createuser root'
 su - postgres -c 'createdb -O root openqa'
 git clone https://github.com/os-autoinst/openQA.git
 cd openQA
-pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); for i in {1..3}; do echo zypper --non-interactive in -C $pkgs && break; done
+pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); for i in {1..3}; do echo zypper -n in -C $pkgs && break || sleep 30; false; done
 cpanm -nq --installdeps .
 for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
@@ -53,7 +52,7 @@ EOF
 }
 
 sub install_containers {
-    assert_script_run('for i in {1.. 3}; do zypper --non-interactive install docker git && break; done', timeout => 600);
+    assert_script_run('for i in {1.. 3}; do zypper -n in docker git && break || sleep 30; false; done', timeout => 600);
     assert_script_run("systemctl start docker");
 }
 
@@ -65,7 +64,7 @@ sub run {
     type_string $testapi::password . "\n";
     wait_still_screen(2);
     diag('Ensure packagekit is not interfering with zypper calls');
-    script_run('systemctl stop packagekit.service; systemctl mask packagekit.service');
+    assert_script_run('systemctl mask --now packagekit');
     if (check_var('OPENQA_FROM_GIT', 1)) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
