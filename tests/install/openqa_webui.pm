@@ -37,7 +37,7 @@ su - postgres -c 'createuser root'
 su - postgres -c 'createdb -O root openqa'
 git clone https://github.com/os-autoinst/openQA.git
 cd openQA
-pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); for i in {1..3}; do echo zypper -n in -C $pkgs && break || sleep 30; false; done
+pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); for i in {1..3}; do zypper -n in -C $pkgs && break || sleep 30; false; done
 cpanm -nq --installdeps .
 for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
 cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
