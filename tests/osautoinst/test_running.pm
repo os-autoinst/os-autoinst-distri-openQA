@@ -5,7 +5,7 @@ use utils;
 
 sub run {
     assert_script_run 'command -v ack >/dev/null || zypper --no-refresh -n in ack';
-    assert_script_run 'ret=false; for i in {1..5} ; do openqa-cli api jobs state=running state=done | ack --passthru --color "running|done" && ret=true && break ; sleep 30 ; done ; [ "$ret" = "true" ]', 300;
+    assert_script_run 'retry -s 30 -r 5 -- openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"', 300;
     save_screenshot;
     clear_root_console;
 }
