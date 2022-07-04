@@ -5,7 +5,6 @@ use utils;
 
 
 sub install_from_repos {
-    assert_script_run('retry -s 30 -- zypper --no-cd -n --gpg-auto-import-keys in openQA-local-db', 600);
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $add_repo;
     die 'Needs implementation for other versions' unless get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
