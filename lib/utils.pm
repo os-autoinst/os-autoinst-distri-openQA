@@ -9,7 +9,8 @@ use File::Basename qw(basename);
 our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig);
 
 sub clear_root_console {
-    enter_cmd('clear');
+    enter_cmd 'clear';
+    enter_cmd 'cd';
     assert_screen 'root-console';
 }
 
