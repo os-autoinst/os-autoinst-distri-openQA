@@ -9,7 +9,11 @@ sub run {
     diag('initialize working copy of openSUSE tests distribution with correct user');
     assert_script_run('username=bernhard email=bernhard@susetest /usr/share/openqa/script/fetchneedles', 3600);
     save_screenshot;
-    assert_script_run('retry -s 30 -- zypper -n in os-autoinst-distri-opensuse-deps', 600);
+    # os-autoinst-distri-opensuse is changing quickly so it is likely to have
+    # changes within the 10 minutes refresh dead-time applied by default in
+    # /etc/zypp/zypp.conf so we need to refresh explicitly with retries in
+    # case of problems.
+    assert_script_run('retry -s 30 -- sh -c "zypper ref && zypper -n in os-autoinst-distri-opensuse-deps"', 600);
     clear_root_console;
     # prepare for next test
     enter_cmd "logout";
