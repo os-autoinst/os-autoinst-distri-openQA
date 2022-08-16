@@ -29,8 +29,6 @@ sub post_fail_hook {
 }
 
 # All steps belonging to core openQA functionality are 'fatal'. by default
-sub test_flags {
-    return {fatal => 1};
-}
+sub test_flags { {fatal => 1} }
 
 1;
