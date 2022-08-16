@@ -14,14 +14,14 @@ sub post_fail_hook {
     if (check_var('OPENQA_FROM_GIT', 1)) {
         send_key 'ctrl-c';     # Stop current command, if any
         assert_script_run 'cd /root/openQA';
-        script_run 'script/client jobs';
+        enter_cmd 'script/openqa-cli api jobs';
         save_screenshot;
-        script_run 'which sass';
+        enter_cmd 'which sass';
         get_log 'journalctl --pager-end --no-tail --no-pager -u apache2' => 'openqa_services.log';
         get_log 'cat nohup.out'                                          => 'openqa_nohup_out.txt';
     }
     else {
-        script_run 'openqa-client jobs';
+        enter_cmd 'openqa-cli api jobs';
         save_screenshot;
         get_log 'journalctl --pager-end --no-tail --no-pager -u apache2 -u openqa-scheduler -u openqa-websockets -u openqa-webui -u openqa-worker@1' => 'openqa_services.log';
         get_log 'cat /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt' => 'autoinst-log.txt';
