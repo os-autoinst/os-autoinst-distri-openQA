@@ -10,6 +10,7 @@ sub run {
     my $ttest      = 'minimalx';
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
     my $cmd        = <<"EOF";
+set -o pipefail
 last_tw_build=\$(OPENQA_CLI_RETRIES=5 openqa-cli api --host $openqa_url assets | jq '.assets | .[] | .name' | sed -n 's/.*Tumbleweed-NET-$arch-Snapshot\\([0-9]\\+\\)-Media.*\$/\\1/p' | sort -n | tail -n 1)
 echo "Last Tumbleweed build on openqa.opensuse.org: \$last_tw_build"
 [ ! -z \$last_tw_build ]
