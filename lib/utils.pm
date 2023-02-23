@@ -6,7 +6,7 @@ use strict;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig);
+our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub clear_root_console {
     enter_cmd 'clear';
@@ -126,6 +126,12 @@ pref("browser.startup.upgradeDialog.enabled", false);
 pref("privacy.restrict3rdpartystorage.rollout.enabledByDefault", false);
 EOF
 });
+}
+
+sub disable_packagekit {
+    diag('Ensure packagekit is not interfering with zypper calls');
+    assert_script_run 'systemctl mask --now packagekit';
+    assert_script_run 'sudo -u bernhard gsettings set org.gnome.software download-updates false';
 }
 
 1;

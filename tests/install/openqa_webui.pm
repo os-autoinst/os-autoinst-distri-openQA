@@ -63,8 +63,7 @@ sub run {
     assert_screen "password-prompt";
     type_string $testapi::password . "\n";
     wait_still_screen(2);
-    diag('Ensure packagekit is not interfering with zypper calls');
-    assert_script_run('systemctl mask --now packagekit');
+    disable_packagekit;
     assert_script_run('zypper --no-cd -n in retry');
     if (check_var('OPENQA_FROM_GIT', 1)) {
         if (get_var('OPENQA_CONTAINERS')) {

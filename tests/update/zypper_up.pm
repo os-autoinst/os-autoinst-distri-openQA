@@ -11,7 +11,7 @@ sub run {
     assert_screen "password-prompt";
     type_string "1\n";
     wait_still_screen(2);
-    assert_script_run 'systemctl mask --now packagekit';
+    disable_packagekit;
     save_screenshot;
     clear_root_console;
     assert_script_run('retry -s 30 -- zypper -n up --auto-agree-with-licenses', timeout => 700, fail_message => 'zypper failed to update packages');
