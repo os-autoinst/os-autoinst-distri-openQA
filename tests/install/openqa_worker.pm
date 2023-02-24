@@ -5,6 +5,7 @@ use utils;
 
 sub run {
     diag('worker setup');
+    disable_packagekit;
     assert_script_run('retry -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-worker"', 3800);
     diag('Login once with fake authentication on openqa webUI to actually create preconfigured API keys for worker authentication');
     assert_script_run('curl http://localhost/login');
