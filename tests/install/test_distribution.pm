@@ -7,7 +7,7 @@ sub run {
     return 1 if check_var('OPENQA_FROM_GIT', 1);
     diag('assuming to be in terminal');
     diag('initialize working copy of openSUSE tests distribution with correct user');
-    assert_script_run('username=bernhard email=bernhard@susetest /usr/share/openqa/script/fetchneedles', 3600);
+    assert_script_run('retry -s 30 -- sh -c "username=bernhard email=bernhard@susetest /usr/share/openqa/script/fetchneedles"', 3600);
     save_screenshot;
     # os-autoinst-distri-opensuse is changing quickly so it is likely to have
     # changes within the 10 minutes refresh dead-time applied by default in
