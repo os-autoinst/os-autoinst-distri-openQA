@@ -1,0 +1,44 @@
+---
+products:
+  openqa-*-dev-x86_64:
+    distri: openqa
+    flavor: dev
+    arch: x86_64
+    version: Tumbleweed
+
+machines:
+  64bit-2G:
+    backend: qemu
+    settings:
+      HDDSIZEGB: "20"
+      QEMUCPU: host
+      QEMURAM: "2048"
+      WORKER_CLASS: qemu_x86_64
+
+job_templates:
+  openqa_from_git:
+    product: openqa-*-dev-x86_64
+    machine: 64bit-2G
+    settings:
+      INSTALL: "1"
+      INSTALL_ONLY: "1"
+      UPDATE: "0"
+      OPENQA_FROM_GIT: "1"
+  openqa_from_containers:
+    product: openqa-*-dev-x86_64
+    machine: 64bit-2G
+    settings:
+      INSTALL: "1"
+      INSTALL_ONLY: "1"
+      UPDATE: "0"
+      OPENQA_FROM_GIT: "1"
+      OPENQA_CONTAINERS: "1"
+  openqa_install:
+    product: openqa-*-dev-x86_64
+    machine: 64bit-2G
+    settings:
+      OPENQA_HOST: "http://openqa.opensuse.org"
+      INSTALL: "1"
+      INSTALL_ONLY: "1"
+      UPDATE: "0"
+      PYTHON: "1"
