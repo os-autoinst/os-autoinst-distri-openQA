@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-use strict;
+use Mojo::Base -strict, -signatures;
 use testapi;
 use autotest;
 use needle;
@@ -11,10 +11,7 @@ testapi::set_distribution(susedistribution->new());
 $testapi::password //= get_var("PASSWORD");
 $testapi::password //= 'nots3cr3t';
 
-sub loadtest($) {
-    my ($test) = @_;
-    autotest::loadtest("/tests/$test");
-}
+sub loadtest($test) { autotest::loadtest("/tests/$test") }
 
 # subs for test types
 sub load_update_tests() {
