@@ -25,7 +25,7 @@ sub load_install_tests() {
     # for now when testing from git only tests the webui itself, not worker
     # interaction
     return 1 if get_var('OPENQA_FROM_GIT');
-    loadtest "install/openqa_worker.pm";
+    loadtest "install/openqa_worker.pm" unless get_var('OPENQA_FROM_BOOTSTRAP');
     loadtest "install/test_distribution.pm";
 }
 

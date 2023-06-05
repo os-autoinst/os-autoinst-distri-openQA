@@ -56,6 +56,11 @@ sub install_containers {
     assert_script_run("systemctl start docker");
 }
 
+sub install_from_bootstrap {
+    assert_script_run('zypper --no-cd -n in openQA-bootstrap');
+    assert_script_run('skip_suse_specifics=1 skip_suse_tests=1 /usr/share/openqa/script/openqa-bootstrap', timeout => 1200);
+}
+
 sub run {
     send_key "ctrl-alt-f3";
     assert_screen "inst-console";
@@ -72,6 +77,9 @@ sub run {
         else {
             install_from_git;
         }
+    }
+    elsif (get_var('OPENQA_FROM_BOOTSTRAP')) {
+        install_from_bootstrap;
     }
     else {
         install_from_repos;
