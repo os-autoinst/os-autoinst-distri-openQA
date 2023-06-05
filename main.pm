@@ -3,7 +3,6 @@ use strict;
 use testapi;
 use autotest;
 use needle;
-use File::Find;
 
 my $distri = testapi::get_var("CASEDIR") . '/lib/susedistribution.pm';
 require $distri;
