@@ -1,9 +1,8 @@
 #!/usr/bin/perl -w
-use strict;
+use Mojo::Base -strict, -signatures;
 use testapi;
 use autotest;
 use needle;
-use File::Find;
 
 my $distri = testapi::get_var("CASEDIR") . '/lib/susedistribution.pm';
 require $distri;
@@ -12,10 +11,7 @@ testapi::set_distribution(susedistribution->new());
 $testapi::password //= get_var("PASSWORD");
 $testapi::password //= 'nots3cr3t';
 
-sub loadtest($) {
-    my ($test) = @_;
-    autotest::loadtest("/tests/$test");
-}
+sub loadtest($test) { autotest::loadtest("/tests/$test") }
 
 # subs for test types
 sub load_update_tests() {
@@ -28,7 +24,7 @@ sub load_install_tests() {
     loadtest "install/openqa_webui.pm";
     # for now when testing from git only tests the webui itself, not worker
     # interaction
-    return 1 if check_var('OPENQA_FROM_GIT', 1);
+    return 1 if get_var('OPENQA_FROM_GIT');
     loadtest "install/openqa_worker.pm";
     loadtest "install/test_distribution.pm";
 }
@@ -75,7 +71,7 @@ elsif (get_var('INSTALL')) {
     load_install_tests();
 }
 # testing from git only tests webui so far
-load_osautoinst_tests() unless check_var('OPENQA_FROM_GIT', 1);
+load_osautoinst_tests() unless get_var('OPENQA_FROM_GIT');
 load_openQA_tests();
 load_python_tests() if get_var('LOAD_PYTHON_TEST_MODULES', 1);
 load_shutdown();
