@@ -33,6 +33,7 @@ job_templates:
       UPDATE: "0"
       OPENQA_FROM_GIT: "1"
       OPENQA_CONTAINERS: "1"
+      LOAD_PYTHON_TEST_MODULES: "0"
   openqa_install:
     product: openqa-*-dev-x86_64
     machine: 64bit-2G
@@ -41,4 +42,3 @@ job_templates:
       INSTALL: "1"
       INSTALL_ONLY: "1"
       UPDATE: "0"
-      PYTHON: "1"
