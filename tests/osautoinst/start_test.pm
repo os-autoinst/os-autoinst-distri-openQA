@@ -3,12 +3,12 @@ use base "openQAcoretest";
 use testapi;
 use utils;
 
-sub run {
+sub full_run {
     # clone the latest "minimalx" job for the most recent Tumbleweed build with matching architecture
-    my $arch       = get_var('ARCH');
-    my $ttest      = 'minimalx';
+    my $arch = get_var('ARCH');
+    my $ttest = 'minimalx';
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
-    my $cmd        = <<"EOF";
+    my $cmd = <<"EOF";
 set -o pipefail
 zypper -n in jq
 resp=\$(OPENQA_CLI_RETRIES=5 openqa-cli api --host $openqa_url jobs version=Tumbleweed scope=relevant arch='$arch' flavor=NET test='$ttest' latest=1)
@@ -19,6 +19,19 @@ echo "Scenario: $arch-$ttest-NET: \$job_id"
 EOF
     assert_script_run($_) foreach (split /\n/, $cmd);
     assert_script_run("retry -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 120);
+}
+
+sub example_run {
+    my $arch = get_var('ARCH');
+    my $casedir = 'https://github.com/os-autoinst/os-autoinst-distri-example.git';
+    my $needlesdir = $casedir . '/needles';
+    assert_script_run "wget https://raw.githubusercontent.com/os-autoinst/os-autoinst-distri-example/main/scenario-definitions.yaml";
+    assert_script_run "openqa-cli schedule --param-file SCENARIO_DEFINITIONS_YAML=scenario-definitions.yaml DISTRI=example VERSION=0 FLAVOR=DVD ARCH=$arch TEST=simple_boot _GROUP_ID=0 BUILD=test CASEDIR=$casedir NEEDLES_DIR=$needlesdir";
+
+}
+
+sub run {
+    get_var('FULL_OPENSUSE_TEST') ? full_run : example_run;
     save_screenshot;
     clear_root_console;
 }
