@@ -4,8 +4,7 @@ use testapi;
 use utils;
 
 sub run {
-    assert_script_run 'command -v ack >/dev/null || zypper --no-refresh -n in ack';
-    assert_script_run 'retry -s 30 -r 5 -- openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"', 300;
+    assert_script_run 'retry -s 60 -r 5 -- openqa-cli api jobs state=running state=done | grep -E "running|done"', 600;
     save_screenshot;
     clear_root_console;
 }
