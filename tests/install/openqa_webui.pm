@@ -16,17 +16,22 @@ sub install_from_repos {
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
-    assert_script_run('retry -s 30 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-local-db"', 600);
-    my $configure = <<'EOF';
-/usr/share/openqa/script/configure-web-proxy
-sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
-systemctl restart apache2
-systemctl enable --now openqa-webui
-systemctl status --no-pager openqa-webui
-systemctl enable --now openqa-scheduler
-systemctl status --no-pager openqa-scheduler
-EOF
-    assert_script_run($_) foreach (split /\n/, $configure);
+    my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
+    assert_script_run('retry -s 30 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-local-db '.$proxy_pkg.'"', 600);
+    if (check_var('OPENQA_WEB_PROXY', 'nginx')) {
+        assert_script_run "/usr/share/openqa/script/configure-web-proxy --nginx";
+        assert_script_run "systemctl disable --now apache2";
+        assert_script_run "systemctl restart nginx";
+    }
+    else {
+        assert_script_run "/usr/share/openqa/script/configure-web-proxy";
+        assert_script_run "systemctl restart apache2";
+    }
+    assert_script_run q{sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini};
+    assert_script_run "systemctl enable --now openqa-webui";
+    assert_script_run "systemctl status --no-pager openqa-webui";
+    assert_script_run "systemctl enable --now openqa-scheduler";
+    assert_script_run "systemctl status --no-pager openqa-scheduler";
 }
 
 sub install_from_git {
