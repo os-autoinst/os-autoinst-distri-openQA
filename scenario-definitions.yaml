@@ -46,3 +46,12 @@ job_templates:
       OPENQA_HOST: "http://openqa.opensuse.org"
       MODE: install
       INSTALL_ONLY: "1"
+  openqa_install_nginx:
+    product: openqa-*-dev-x86_64
+    machine: 64bit-2G
+    settings:
+      OPENQA_HOST: "http://openqa.opensuse.org"
+      MODE: install
+      INSTALL_ONLY: "1"
+      UPDATE: "0"
+      OPENQA_WEB_PROXY: 'nginx'
