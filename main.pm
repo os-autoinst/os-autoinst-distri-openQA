@@ -64,10 +64,10 @@ sub load_shutdown() {
 }
 
 # load tests in the right order
-if (get_var('UPDATE')) {
+if (check_var('MODE', 'update') || get_var('UPDATE')) {
     load_update_tests();
 }
-elsif (get_var('INSTALL')) {
+elsif (check_var('MODE', 'install') || get_var('INSTALL')) {
     load_install_tests();
 }
 # testing from git only tests webui so far

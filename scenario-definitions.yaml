@@ -20,17 +20,15 @@ job_templates:
     product: openqa-*-dev-x86_64
     machine: 64bit-2G
     settings:
-      INSTALL: "1"
+      MODE: install
       INSTALL_ONLY: "1"
-      UPDATE: "0"
       OPENQA_FROM_GIT: "1"
   openqa_from_containers:
     product: openqa-*-dev-x86_64
     machine: 64bit-2G
     settings:
-      INSTALL: "1"
+      MODE: install
       INSTALL_ONLY: "1"
-      UPDATE: "0"
       OPENQA_FROM_GIT: "1"
       OPENQA_CONTAINERS: "1"
       LOAD_PYTHON_TEST_MODULES: "0"
@@ -38,15 +36,13 @@ job_templates:
     product: openqa-*-dev-x86_64
     machine: 64bit-2G
     settings:
-      INSTALL: "1"
+      MODE: install
       INSTALL_ONLY: "1"
-      UPDATE: "0"
       OPENQA_FROM_BOOTSTRAP: "1"
   openqa_install:
     product: openqa-*-dev-x86_64
     machine: 64bit-2G
     settings:
       OPENQA_HOST: "http://openqa.opensuse.org"
-      INSTALL: "1"
+      MODE: install
       INSTALL_ONLY: "1"
-      UPDATE: "0"
