@@ -21,22 +21,25 @@ sub switch_to_x11 {
     send_key "ctrl-alt-$x11_tty";
 }
 
+sub handle_gui_password {
+    assert_screen 'lockscreen-password-prompt';
+    type_string $testapi::password;
+    assert_screen 'lockscreen-typed-password';
+    send_key 'ret';
+}
+
 sub wait_for_desktop {
     assert_screen([qw/boot-menu openqa-desktop/]);
-    if (match_has_tag('boot-menu')) {
-        send_key 'ret';
-    }
+    send_key 'ret' if match_has_tag('boot-menu');
     for (1..3) {
         assert_screen 'openqa-desktop', 500;
         if (match_has_tag('openqa-desktop-locked')) {
             send_key 'esc';
-            wait_still_screen(1);
-            type_string $testapi::password . "\n";
+            handle_gui_password;
         }
         elsif (match_has_tag('openqa-desktop-login')) {
             assert_and_click 'openqa-desktop-login';
-            wait_still_screen(1);
-            type_string $testapi::password . "\n";
+            handle_gui_password;
         }
         elsif (match_has_tag('openqa-desktop-gnome-auth-required')) {
             assert_and_click 'openqa-desktop-gnome-auth-required';
