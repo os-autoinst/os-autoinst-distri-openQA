@@ -39,3 +39,4 @@ jobs:
           HDD_1=opensuse-Tumbleweed-x86_64-${{ steps.latest_build.outputs.build }}-Tumbleweed@64bit-3G.qcow2
           BUILD="$GH_REPO.git#$GH_REF" _GROUP_ID="0"
           CASEDIR="$GITHUB_SERVER_URL/$GH_REPO.git#$GH_REF"
+          OPENQA_CLI_RETRIES=3
