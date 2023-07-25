@@ -16,12 +16,6 @@ sub loadtest ($test) {
     autotest::loadtest("/tests/$filename");
 }
 
-# subs for test types
-sub load_update_tests() {
-    loadtest 'update/zypper_up';
-    loadtest 'update/reboot';
-}
-
 sub load_install_tests() {
     loadtest 'install/boot';
     loadtest 'install/openqa_webui';
@@ -67,12 +61,7 @@ sub load_shutdown() {
 }
 
 # load tests in the right order
-if (check_var('MODE', 'update') || get_var('UPDATE')) {
-    load_update_tests();
-}
-elsif (check_var('MODE', 'install') || get_var('INSTALL')) {
-    load_install_tests();
-}
+load_install_tests();
 # testing from git only tests webui so far
 load_osautoinst_tests() unless get_var('OPENQA_FROM_GIT');
 load_openQA_tests();

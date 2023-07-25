@@ -20,7 +20,6 @@ machines:
   machine: 64bit-2G
 
 .common_settings: &common_settings
-  MODE: install
   INSTALL_ONLY: "1"
 
 job_templates:
