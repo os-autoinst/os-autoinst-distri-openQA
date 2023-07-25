@@ -1,10 +1,10 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
 use utils;
 
 sub run {
-    type_string "systemctl reboot\n";
+    enter_cmd 'systemctl reboot';
     wait_for_desktop;
 }
 

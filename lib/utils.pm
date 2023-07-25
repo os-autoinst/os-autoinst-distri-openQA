@@ -1,17 +1,21 @@
 package utils;
 
-use base Exporter;
+use Mojo::Base 'Exporter', -signatures;
 use Exporter;
 use strict;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub clear_root_console {
     enter_cmd 'clear';
     enter_cmd 'cd';
     assert_screen 'root-console';
+}
+
+sub switch_to_root_console {
+    send_key 'ctrl-alt-f3';
 }
 
 sub switch_to_x11 {
@@ -23,7 +27,7 @@ sub switch_to_x11 {
 
 sub handle_gui_password {
     assert_screen 'lockscreen-password-prompt';
-    type_string $testapi::password;
+    type_password;
     assert_screen 'lockscreen-typed-password';
     send_key 'ret';
 }
@@ -104,8 +108,7 @@ sub ensure_unlocked_desktop {
 # - $cmd: The containers runner (docker, podman,...)
 # - $timeout: Time in seconds until this fails
 #
-sub wait_for_container_log {
-    my ($container, $text, $cmd, $timeout) = @_;
+sub wait_for_container_log ($container, $text, $cmd, $timeout = undef) {
     $timeout //= 50;
     while ($timeout > 0) {
         my $output = script_output("$cmd logs $container 2>&1");

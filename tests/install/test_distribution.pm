@@ -1,10 +1,10 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
 use utils;
 
 sub run {
-    return 1 if check_var('OPENQA_FROM_GIT', 1);
+    return 1 if get_var('OPENQA_FROM_GIT');
     diag('assuming to be in terminal');
     if (get_var('FULL_OPENSUSE_TEST')) {
         diag('initialize working copy of openSUSE tests distribution with correct user');
@@ -18,9 +18,8 @@ sub run {
     assert_script_run('retry -s 30 -- sh -c "zypper ref && zypper -n in os-autoinst-distri-opensuse-deps"', 600);
     clear_root_console;
     # prepare for next test
-    enter_cmd "logout";
+    enter_cmd 'logout';
     switch_to_x11;
 }
 
 1;
-

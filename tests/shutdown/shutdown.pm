@@ -1,12 +1,13 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
+use utils qw(switch_to_root_console);
 
 sub run {
-    send_key 'ctrl-alt-f3';
+    switch_to_root_console;
     enter_cmd 'cd';
-    assert_screen "root-console";
-    enter_cmd "poweroff";
+    assert_screen 'root-console';
+    enter_cmd 'poweroff';
     assert_shutdown 300;
 }
 

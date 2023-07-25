@@ -1,5 +1,5 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
 
 sub run {

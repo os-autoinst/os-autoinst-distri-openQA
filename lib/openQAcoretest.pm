@@ -1,17 +1,17 @@
 package openQAcoretest;
-use base "basetest";
+use Mojo::Base 'basetest', -signatures;
 use testapi;
+use utils qw(switch_to_root_console);
 
 
-sub get_log {
-    my ($cmd, $name) = @_;
+sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name";
-    upload_logs($name) if !$ret;
+    upload_logs($name) unless $ret;
 }
 
 sub post_fail_hook {
-    send_key 'ctrl-alt-f3';    # root console
-    if (check_var('OPENQA_FROM_GIT', 1)) {
+    switch_to_root_console;
+    if (get_var('OPENQA_FROM_GIT')) {
         send_key 'ctrl-c';     # Stop current command, if any
         assert_script_run 'cd /root/openQA';
         enter_cmd 'script/openqa-cli api jobs';

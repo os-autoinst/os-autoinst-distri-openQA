@@ -1,5 +1,5 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
 use utils;
 
@@ -22,12 +22,12 @@ sub install_from_repos {
     if (my $proxy = get_var('OPENQA_WEB_PROXY')) { $proxy_args = "--proxy=$proxy" }
     assert_script_run "/usr/share/openqa/script/configure-web-proxy $proxy_args";
     if (check_var('OPENQA_WEB_PROXY', 'nginx')) {
-        assert_script_run "systemctl disable --now apache2";
-        assert_script_run "systemctl restart nginx";
+        assert_script_run 'systemctl disable --now apache2';
+        assert_script_run 'systemctl restart nginx';
     }
     else {
-        assert_script_run "/usr/share/openqa/script/configure-web-proxy";
-        assert_script_run "systemctl restart apache2";
+        assert_script_run '/usr/share/openqa/script/configure-web-proxy';
+        assert_script_run 'systemctl restart apache2';
     }
     assert_script_run($_) foreach (split /\n/, <<~'EOF');
     sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
@@ -61,7 +61,7 @@ sub install_from_git {
 
 sub install_containers {
     assert_script_run('retry -s 30 -- zypper -n in docker git', timeout => 600);
-    assert_script_run("systemctl start docker");
+    assert_script_run('systemctl start docker');
 }
 
 sub install_from_bootstrap {
@@ -70,15 +70,16 @@ sub install_from_bootstrap {
 }
 
 sub run {
-    send_key "ctrl-alt-f3";
-    assert_screen "inst-console";
+    switch_to_root_console;
+    assert_screen 'inst-console';
     type_string "root\n";
-    assert_screen "password-prompt";
-    type_string $testapi::password . "\n";
+    assert_screen 'password-prompt';
+    type_password;
+    send_key 'ret';
     wait_still_screen(2);
     disable_packagekit;
     assert_script_run('zypper --no-cd -n in retry');
-    if (check_var('OPENQA_FROM_GIT', 1)) {
+    if (get_var('OPENQA_FROM_GIT')) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
         }
