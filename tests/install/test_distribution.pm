@@ -17,9 +17,6 @@ sub run {
     # case of problems.
     assert_script_run('retry -s 30 -- sh -c "zypper ref && zypper -n in os-autoinst-distri-opensuse-deps"', 600);
     clear_root_console;
-    # prepare for next test
-    enter_cmd 'logout';
-    switch_to_x11;
 }
 
 1;
