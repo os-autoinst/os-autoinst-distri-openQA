@@ -43,12 +43,6 @@ sub load_openQA_tests() {
     else {
       loadtest 'openQA/dashboard';
       loadtest 'openQA/login';
-      return 1 if get_var('INSTALL_ONLY');
-      loadtest 'openQA/build_results';
-      loadtest 'openQA/test_live';
-      loadtest 'openQA/test_results';
-      loadtest 'openQA/tests';
-      loadtest 'openQA/admin';
     }
 }
 
