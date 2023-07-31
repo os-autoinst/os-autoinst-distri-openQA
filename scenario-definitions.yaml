@@ -15,40 +15,38 @@ machines:
       QEMURAM: "2048"
       WORKER_CLASS: qemu_x86_64
 
+.common: &common
+  product: openqa-*-dev-x86_64
+  machine: 64bit-2G
+
+.common_settings: &common_settings
+  MODE: install
+  INSTALL_ONLY: "1"
+
 job_templates:
   openqa_from_git:
-    product: openqa-*-dev-x86_64
-    machine: 64bit-2G
+    <<: *common
     settings:
-      MODE: install
-      INSTALL_ONLY: "1"
+      <<: *common_settings
       OPENQA_FROM_GIT: "1"
   openqa_from_containers:
-    product: openqa-*-dev-x86_64
-    machine: 64bit-2G
+    <<: *common
     settings:
-      MODE: install
-      INSTALL_ONLY: "1"
+      <<: *common_settings
       OPENQA_FROM_GIT: "1"
       OPENQA_CONTAINERS: "1"
       LOAD_PYTHON_TEST_MODULES: "0"
   openqa_from_bootstrap:
-    product: openqa-*-dev-x86_64
-    machine: 64bit-2G
+    <<: *common
     settings:
-      MODE: install
-      INSTALL_ONLY: "1"
+      <<: *common_settings
       OPENQA_FROM_BOOTSTRAP: "1"
   openqa_install:
-    product: openqa-*-dev-x86_64
-    machine: 64bit-2G
+    <<: *common
     settings:
-      MODE: install
-      INSTALL_ONLY: "1"
+      <<: *common_settings
   openqa_install_nginx:
-    product: openqa-*-dev-x86_64
-    machine: 64bit-2G
+    <<: *common
     settings:
-      MODE: install
-      INSTALL_ONLY: "1"
+      <<: *common_settings
       OPENQA_WEB_PROXY: 'nginx'
