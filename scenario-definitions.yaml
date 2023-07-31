@@ -41,3 +41,8 @@ job_templates:
     <<: *common
     settings:
       OPENQA_WEB_PROXY: 'nginx'
+  openqa_install_nginx+multi-machine:
+    <<: *common
+    settings:
+      OPENQA_WEB_PROXY: 'nginx'
+      WITH_MULTI_MACHINE: true

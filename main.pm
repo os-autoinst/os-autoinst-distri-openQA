@@ -26,6 +26,10 @@ sub load_install_tests() {
     loadtest 'install/test_distribution';
 }
 
+sub load_multi_machine_tests() {
+    loadtest 'install/multi_machine.py';
+}
+
 sub load_osautoinst_tests() {
     loadtest 'osautoinst/worker';
     loadtest 'osautoinst/start_test';
@@ -56,6 +60,7 @@ sub load_shutdown() {
 
 # load tests in the right order
 load_install_tests();
+load_multi_machine_tests() if get_var('WITH_MULTI_MACHINE');
 # testing from git only tests webui so far
 load_osautoinst_tests() unless get_var('OPENQA_FROM_GIT');
 load_openQA_tests();
