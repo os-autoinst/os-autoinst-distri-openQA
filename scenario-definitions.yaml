@@ -19,34 +19,25 @@ machines:
   product: openqa-*-dev-x86_64
   machine: 64bit-2G
 
-.common_settings: &common_settings
-  MODE: install
-  INSTALL_ONLY: "1"
-
 job_templates:
   openqa_from_git:
     <<: *common
     settings:
-      <<: *common_settings
       OPENQA_FROM_GIT: "1"
   openqa_from_containers:
     <<: *common
     settings:
-      <<: *common_settings
       OPENQA_FROM_GIT: "1"
       OPENQA_CONTAINERS: "1"
       LOAD_PYTHON_TEST_MODULES: "0"
   openqa_from_bootstrap:
     <<: *common
     settings:
-      <<: *common_settings
       OPENQA_FROM_BOOTSTRAP: "1"
   openqa_install:
     <<: *common
     settings:
-      <<: *common_settings
   openqa_install_nginx:
     <<: *common
     settings:
-      <<: *common_settings
       OPENQA_WEB_PROXY: 'nginx'

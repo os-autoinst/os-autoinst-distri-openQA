@@ -1,5 +1,5 @@
 use strict;
-use base "openQAcoretest";
+use base 'openQAcoretest';
 use testapi;
 use utils;
 
@@ -28,4 +28,3 @@ EOF
 }
 
 1;
-

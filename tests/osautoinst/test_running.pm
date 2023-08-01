@@ -1,5 +1,5 @@
 use strict;
-use base "openQAcoretest";
+use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
 use utils;
 
@@ -10,8 +10,7 @@ sub run {
     clear_root_console;
 }
 
-sub post_fail_hook {
-    my ($self) = @_;
+sub post_fail_hook ($self) {
     $self->SUPER::post_fail_hook;
     script_run 'lsmod | grep kvm';
     save_screenshot;
