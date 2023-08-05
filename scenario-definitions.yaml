@@ -36,7 +36,6 @@ job_templates:
       OPENQA_FROM_BOOTSTRAP: "1"
   openqa_install:
     <<: *common
-    settings:
   openqa_install_nginx:
     <<: *common
     settings:
