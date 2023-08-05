@@ -1,0 +1,16 @@
+---
+name: Various Checks
+# yamllint disable-line rule:truthy
+on: [push, pull_request]
+
+jobs:
+  validate-yaml:
+    runs-on: ubuntu-latest
+    container:
+      image: registry.opensuse.org/devel/openqa/containers/tumbleweed:client
+    steps:
+      - uses: actions/checkout@v3
+      - name: Validate yaml
+        run: |-
+          curl https://openqa.opensuse.org/schema/JobScenarios-01.yaml -O
+          openqa-validate-yaml --schema-file JobScenarios-01.yaml scenario-definitions.yaml
