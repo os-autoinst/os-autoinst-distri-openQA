@@ -17,7 +17,7 @@ sub install_from_repos {
     $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
     my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
-    assert_script_run('retry -s 30 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-local-db '.$proxy_pkg.'"', 600);
+    assert_script_run('retry -e -s 30 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-local-db '.$proxy_pkg.'"', 600);
     my $proxy_args = '';
     if (my $proxy = get_var('OPENQA_WEB_PROXY')) { $proxy_args = "--proxy=$proxy" }
     assert_script_run "/usr/share/openqa/script/configure-web-proxy $proxy_args";
@@ -40,13 +40,13 @@ sub install_from_repos {
 
 sub install_from_git {
     assert_script_run($_, 600) foreach (split /\n/, <<~'EOF');
-    retry -s 30 -- zypper -n in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2
+    retry -e -s 30 -- zypper -n in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2
     systemctl start postgresql || systemctl status --no-pager postgresql
     su - postgres -c 'createuser root'
     su - postgres -c 'createdb -O root openqa'
     git clone https://github.com/os-autoinst/openQA.git
     cd openQA
-    pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -s 30 -- zypper -n in -C $pkgs
+    pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -e -s 30 -- zypper -n in -C $pkgs
     cpanm -nq --installdeps .
     for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
     cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/

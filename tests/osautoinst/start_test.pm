@@ -18,7 +18,7 @@ if [ -z \$job_id  ]; then echo "Unable to find a suitable job to clone from o3. 
 echo "Scenario: $arch-$ttest-NET: \$job_id"
 EOF
     assert_script_run($_) foreach (split /\n/, $cmd);
-    assert_script_run("retry -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 120);
+    assert_script_run("retry -e -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 120);
 }
 
 sub example_run {
