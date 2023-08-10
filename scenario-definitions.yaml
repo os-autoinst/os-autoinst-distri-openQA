@@ -34,9 +34,11 @@ job_templates:
     <<: *common
     settings:
       OPENQA_FROM_BOOTSTRAP: "1"
-  openqa_install:
-    <<: *common
   openqa_install_nginx:
     <<: *common
     settings:
       OPENQA_WEB_PROXY: 'nginx'
+  openqa_install+publish:
+    settings:
+      PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%.qcow2'
+      PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-uefi-vars.qcow2'
