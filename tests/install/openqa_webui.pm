@@ -3,6 +3,7 @@ use base 'openQAcoretest';
 use testapi;
 use utils;
 
+use OpenQA::Wheel::OpenQATest::Install qw(bootstrap);
 
 sub install_from_repos {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
@@ -65,8 +66,7 @@ sub install_containers {
 }
 
 sub install_from_bootstrap {
-    assert_script_run('zypper --no-cd -n in openQA-bootstrap');
-    assert_script_run('skip_suse_specifics=1 skip_suse_tests=1 /usr/share/openqa/script/openqa-bootstrap', timeout => 1200);
+    bootstrap(settings => [qw(skip_suse_specifics=1 skip_suse_tests=1)]);
 }
 
 sub run {
