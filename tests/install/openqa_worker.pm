@@ -16,7 +16,7 @@ key = 1234567890ABCDEF
 secret = 1234567890ABCDEF
 EOF
 ');
-    wait_still_screen(1);
+    assert_script_run('os-autoinst-setup-multi-machine');
     my $worker_setup = <<'EOF';
 systemctl start openqa-worker@1
 systemctl status --no-pager openqa-worker@1
