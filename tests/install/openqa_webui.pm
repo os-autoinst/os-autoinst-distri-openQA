@@ -44,7 +44,7 @@ sub install_from_git {
     systemctl start postgresql || systemctl status --no-pager postgresql
     su - postgres -c 'createuser root'
     su - postgres -c 'createdb -O root openqa'
-    git clone https://github.com/os-autoinst/openQA.git
+    retry -e -s 30 -- git clone https://github.com/os-autoinst/openQA.git
     cd openQA
     pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -e -s 30 -- zypper -n in -C $pkgs
     cpanm -nq --installdeps .
