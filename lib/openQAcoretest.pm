@@ -14,7 +14,7 @@ sub post_fail_hook {
     if (check_var('OPENQA_FROM_GIT', 1)) {
         send_key 'ctrl-c';     # Stop current command, if any
         assert_script_run 'cd /root/openQA';
-        enter_cmd 'script/openqa-cli api jobs';
+        enter_cmd '[ -e script/openqa-cli ] && script/openqa-cli api jobs';
         save_screenshot;
         enter_cmd 'which sass';
         get_log 'journalctl --pager-end --no-tail --no-pager -u apache2' => 'openqa_services.log';
