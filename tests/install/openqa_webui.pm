@@ -78,7 +78,7 @@ sub run {
     send_key 'ret';
     wait_still_screen(2);
     disable_packagekit;
-    assert_script_run('zypper --no-cd -n in retry');
+    assert_script_run('for i in {1..7}; do zypper --no-cd -n in retry && break; sleep $((i**2*20)); done');
     if (get_var('OPENQA_FROM_GIT')) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
