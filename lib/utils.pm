@@ -21,7 +21,8 @@ sub switch_to_root_console {
 sub switch_to_x11 {
     my @hdd = split(/-/, basename get_required_var('HDD_1'));
     # older openSUSE Tumbleweed has x11 still on tty7
-    my $x11_tty = $hdd[3] < 20190617 ? 'f7' : 'f2';
+    # minimalx has x11 on tty7
+    my $x11_tty = ($hdd[3] < 20190617 or check_var('DESKTOP', 'minimalx')) ? 'f7' : 'f2';
     send_key "ctrl-alt-$x11_tty";
 }
 
@@ -149,7 +150,7 @@ EOF
 sub disable_packagekit {
     diag('Ensure packagekit is not interfering with zypper calls');
     assert_script_run 'systemctl mask --now packagekit';
-    assert_script_run 'sudo -u bernhard gsettings set org.gnome.software download-updates false';
+    assert_script_run 'sudo -u bernhard gsettings set org.gnome.software download-updates false' if get_var('DESKTOP', 'gnome') eq 'gnome';
 }
 
 1;
