@@ -13,6 +13,7 @@ sub run {
     send_key 'ret';
     wait_still_screen(2);
     assert_script_run 'systemctl status --no-pager openqa-worker@1 | grep --color -z "active (running)"';
+    script_run('dmesg -D'); # workaround for bsc#1217397
     save_screenshot;
     clear_root_console;
 }

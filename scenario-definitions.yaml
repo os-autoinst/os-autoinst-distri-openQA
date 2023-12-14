@@ -23,23 +23,28 @@ job_templates:
   openqa_from_git:
     <<: *common
     settings:
+      DESKTOP: minimalx
       OPENQA_FROM_GIT: "1"
   openqa_from_containers:
     <<: *common
     settings:
-      OPENQA_FROM_GIT: "1"
-      OPENQA_CONTAINERS: "1"
+      DESKTOP: minimalx
       LOAD_PYTHON_TEST_MODULES: "0"
+      OPENQA_CONTAINERS: "1"
+      OPENQA_FROM_GIT: "1"
   openqa_from_bootstrap:
     <<: *common
     settings:
+      DESKTOP: minimalx
       OPENQA_FROM_BOOTSTRAP: "1"
   openqa_install_nginx:
     <<: *common
     settings:
+      DESKTOP: minimalx
       OPENQA_WEB_PROXY: 'nginx'
   openqa_install+publish:
     <<: *common
     settings:
+      DESKTOP: minimalx
       PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%.qcow2'
       PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-uefi-vars.qcow2'
