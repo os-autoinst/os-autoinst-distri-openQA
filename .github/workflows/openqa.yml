@@ -37,5 +37,5 @@ jobs:
           --param-file SCENARIO_DEFINITIONS_YAML=scenario-definitions.yaml
           DISTRI=openQA VERSION=Tumbleweed FLAVOR=dev ARCH=x86_64
           HDD_1=opensuse-Tumbleweed-x86_64-${{ steps.latest_build.outputs.build }}-minimalx@64bit.qcow2
-          BUILD="$(tr '/' ':' <<<"$GH_REPO")#$GH_REF" _GROUP_ID="0"
+          BUILD=$(tr '/' ':' <<<"$GH_REPO#$GH_REF") _GROUP_ID=0
           CASEDIR="$GITHUB_SERVER_URL/$GH_REPO.git#$GH_REF"
