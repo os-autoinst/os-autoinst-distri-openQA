@@ -2,7 +2,6 @@ package utils;
 
 use Mojo::Base 'Exporter', -signatures;
 use Exporter;
-use strict;
 use testapi;
 use File::Basename qw(basename);
 

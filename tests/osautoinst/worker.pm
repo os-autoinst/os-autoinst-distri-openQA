@@ -1,5 +1,4 @@
-use strict;
-use base 'openQAcoretest';
+use Mojo::Base 'openQAcoretest';
 use testapi;
 use utils qw(wait_for_desktop switch_to_root_console clear_root_console);
 

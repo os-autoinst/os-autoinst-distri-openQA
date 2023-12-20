@@ -1,5 +1,4 @@
-use strict;
-use base 'openQAcoretest';
+use Mojo::Base 'openQAcoretest';
 use utils;
 
 sub run {
