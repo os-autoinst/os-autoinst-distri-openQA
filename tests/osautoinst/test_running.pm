@@ -1,4 +1,3 @@
-use strict;
 use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
 use utils;
