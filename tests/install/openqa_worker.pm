@@ -15,13 +15,19 @@ key = 1234567890ABCDEF
 secret = 1234567890ABCDEF
 EOF
 ');
+    if (get_var('FULL_MM_TEST')) {
+        # add tap class to worker config
+        my $arch = get_required_var('ARCH');
+        assert_script_run q{sed -i -e "s/\(\[global\]\)/\1\nWORKER_CLASS=qemu_}.$arch.q{,tap/" /etc/openqa/workers.ini};
+    }
     assert_script_run('os-autoinst-setup-multi-machine');
     my $worker_setup = <<'EOF';
-systemctl start openqa-worker@1
+systemctl status --no-pager os-autoinst-openvswitch
+systemctl enable --now openqa-worker@1
 systemctl status --no-pager openqa-worker@1
-systemctl enable openqa-worker@1
 EOF
     assert_script_run($_) foreach (split /\n/, $worker_setup);
+    assert_script_run "systemctl enable --now openqa-worker@2" if get_var('FULL_MM_TEST');
     save_screenshot;
     clear_root_console;
 }

@@ -5,7 +5,12 @@ use Exporter;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+
+sub get_log ($cmd, $name) {
+    my $ret = script_run "$cmd | tee $name";
+    upload_logs($name) unless $ret;
+}
 
 sub clear_root_console {
     enter_cmd 'clear';
