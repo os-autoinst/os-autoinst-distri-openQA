@@ -35,23 +35,16 @@ sub handle_gui_password {
 sub wait_for_desktop {
     assert_screen([qw/boot-menu openqa-desktop/]);
     send_key 'ret' if match_has_tag('boot-menu');
-    for (1..3) {
-        assert_screen 'openqa-desktop', 500;
-        if (match_has_tag('openqa-desktop-locked')) {
-            send_key 'esc';
-            handle_gui_password;
-        }
-        elsif (match_has_tag('openqa-desktop-login')) {
-            assert_and_click 'openqa-desktop-login';
-            handle_gui_password;
-        }
-        elsif (match_has_tag('openqa-desktop-gnome-auth-required')) {
-            assert_and_click 'openqa-desktop-gnome-auth-required';
-        }
-        else {
-            last;
-        }
+    assert_screen 'openqa-desktop', 500;
+    return if match_has_tag('generic-desktop');
+    if (match_has_tag('openqa-desktop-locked')) {
+        send_key 'esc';
     }
+    elsif (match_has_tag('openqa-desktop-login')) {
+        assert_and_click 'openqa-desktop-login';
+    }
+    handle_gui_password;
+    assert_screen 'generic-desktop';
 }
 
 
