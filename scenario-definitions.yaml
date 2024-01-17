@@ -42,6 +42,13 @@ job_templates:
     settings:
       DESKTOP: minimalx
       OPENQA_WEB_PROXY: 'nginx'
+  openqa_install_multimachine:
+    <<: *common
+    settings:
+      DESKTOP: minimalx
+      QEMURAM: "4096"
+      FULL_OPENSUSE_TEST: "1"
+      FULL_MM_TEST: "1"
   openqa_install+publish:
     <<: *common
     settings:

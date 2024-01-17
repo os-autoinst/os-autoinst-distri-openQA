@@ -5,7 +5,12 @@ use Exporter;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+
+sub get_log ($cmd, $name) {
+    my $ret = script_run "$cmd | tee $name";
+    upload_logs($name) unless $ret;
+}
 
 sub clear_root_console {
     enter_cmd 'clear';
@@ -35,23 +40,16 @@ sub handle_gui_password {
 sub wait_for_desktop {
     assert_screen([qw/boot-menu openqa-desktop/]);
     send_key 'ret' if match_has_tag('boot-menu');
-    for (1..3) {
-        assert_screen 'openqa-desktop', 500;
-        if (match_has_tag('openqa-desktop-locked')) {
-            send_key 'esc';
-            handle_gui_password;
-        }
-        elsif (match_has_tag('openqa-desktop-login')) {
-            assert_and_click 'openqa-desktop-login';
-            handle_gui_password;
-        }
-        elsif (match_has_tag('openqa-desktop-gnome-auth-required')) {
-            assert_and_click 'openqa-desktop-gnome-auth-required';
-        }
-        else {
-            last;
-        }
+    assert_screen 'openqa-desktop', 500;
+    return if match_has_tag('generic-desktop');
+    if (match_has_tag('openqa-desktop-locked')) {
+        send_key 'esc';
     }
+    elsif (match_has_tag('openqa-desktop-login')) {
+        assert_and_click 'openqa-desktop-login';
+    }
+    handle_gui_password;
+    assert_screen 'generic-desktop';
 }
 
 
