@@ -14,10 +14,21 @@ machines:
       QEMUCPU: host
       QEMURAM: "2048"
       WORKER_CLASS: qemu_x86_64
+  64bit-4G:
+    backend: qemu
+    settings:
+      HDDSIZEGB: "20"
+      QEMUCPU: host
+      QEMURAM: "4096"
+      WORKER_CLASS: qemu_x86_64
 
 .common: &common
   product: openqa-*-dev-x86_64
   machine: 64bit-2G
+
+.common_4g: &common_4g
+  product: openqa-*-dev-x86_64
+  machine: 64bit-4G
 
 job_templates:
   openqa_from_git:
@@ -43,10 +54,9 @@ job_templates:
       DESKTOP: minimalx
       OPENQA_WEB_PROXY: 'nginx'
   openqa_install_multimachine:
-    <<: *common
+    <<: *common_4g
     settings:
       DESKTOP: minimalx
-      QEMURAM: "4096"
       FULL_OPENSUSE_TEST: "1"
       FULL_MM_TEST: "1"
   openqa_install+publish:
