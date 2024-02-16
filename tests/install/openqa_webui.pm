@@ -39,7 +39,7 @@ sub install_from_repos {
 
 sub install_from_git {
     assert_script_run($_, 600) foreach (split /\n/, <<~'EOF');
-    retry -e -s 30 -- zypper -n in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2
+    retry -e -s 30 -- zypper -n in -C 'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2 npm
     systemctl start postgresql || systemctl status --no-pager postgresql
     su - postgres -c 'createuser root'
     su - postgres -c 'createdb -O root openqa'
@@ -47,6 +47,7 @@ sub install_from_git {
     cd openQA
     pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -e -s 30 -- zypper -n in -C $pkgs
     cpanm -nq --installdeps .
+    npm install
     for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
     cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
     sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf

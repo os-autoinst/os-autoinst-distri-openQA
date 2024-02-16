@@ -20,7 +20,7 @@ EOF
         my $arch = get_required_var('ARCH');
         assert_script_run q{sed -i -e "s/\(\[global\]\)/\1\nWORKER_CLASS=qemu_}.$arch.q{,tap/" /etc/openqa/workers.ini};
     }
-    assert_script_run('os-autoinst-setup-multi-machine');
+    assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
     my $worker_setup = <<'EOF';
 systemctl status --no-pager os-autoinst-openvswitch
 systemctl enable --now openqa-worker@1
