@@ -29,6 +29,11 @@ jobs:
           job_groups/${OPENQA_GROUP_ID:-1}/build_results limit_builds=1 only_tagged=1
           | jq -r '[ .build_results[] | select(.tag.description=="published") | .build ][]'
           ) >> "$GITHUB_OUTPUT"
+      - name: Link to test result overview page
+        run: >-
+          build=$(tr '/' ':' <<<"$GH_REPO#$GH_REF");
+          build=$(perl -e 'use Mojo::Util; print(Mojo::Util::url_escape($ARGV[0]))' "$build");
+          echo "${OPENQA_HOST:-https://openqa.opensuse.org}/tests/overview?flavor=dev&build=$build"
       - name: Trigger and monitor openQA test
         run: >-
           openqa-cli schedule
