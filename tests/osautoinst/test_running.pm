@@ -7,7 +7,7 @@ sub run ($self) {
     if (get_var('FULL_MM_TEST')) {
         assert_script_run q{retry -s 30 -r 29 -- sh -c 'r=`openqa-cli api jobs test=ping_client | jq -r ".jobs | max_by(.id) | if .result != \"none\" then .result else .state end"`; echo $r | ack "incomplete|failed" && killall retry; echo $r | ack --passthru passed'}, 900;
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
-        assert_script_run 'ip a del 10.0.2.2/15 dev br1';
+        script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
         $self->upload_mm_logs();
         get_log 'journalctl --pager-end --no-tail --no-pager -u apache2 -u nginx -u openqa-scheduler -u openqa-websockets -u openqa-webui -u openqa-worker@1' => 'openqa_services.log';
         get_log '(cat /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt ||:)' => 'autoinst-log.txt';
