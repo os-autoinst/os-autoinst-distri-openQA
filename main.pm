@@ -18,6 +18,7 @@ sub loadtest ($test) {
 
 sub load_install_tests() {
     loadtest 'install/boot';
+    loadtest 'install/prepare';
     loadtest 'install/openqa_webui';
     # for now when testing from git only tests the webui itself, not worker
     # interaction
