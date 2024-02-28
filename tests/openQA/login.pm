@@ -1,9 +1,10 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
 
+use OpenQA::Wheel::OpenQATest::WebUI qw(login);
+
 sub run {
-    assert_and_click 'openqa-login';
-    assert_screen 'openqa-logged-in';
+    login;
 }
 
 1;
