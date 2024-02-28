@@ -2,13 +2,13 @@ use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
 use utils;
 
-sub fetch_job_id($ttest, $flavor, $openqa_url) {
+sub fetch_job_id($groupid, $ttest, $flavor, $openqa_url) {
     # Stores the job id of the latest $ttest job for the most recent Tumbleweed build with matching architecture in $job_id on the shell on the SUT
     my $arch = get_var('ARCH');
     my $cmd = <<"EOF";
 set -o pipefail
 zypper -n in jq
-resp=\$(OPENQA_CLI_RETRIES=5 openqa-cli api --host $openqa_url jobs version=Tumbleweed scope=relevant arch='$arch' flavor=$flavor test='$ttest' latest=1)
+resp=\$(OPENQA_CLI_RETRIES=5 openqa-cli api --host $openqa_url jobs version=Tumbleweed scope=relevant arch='$arch' flavor=$flavor test='$ttest' groupid=$groupid latest=1)
 job_id=\$(echo "\$resp" | jq -r '.jobs | map(select(.result == "passed")) | max_by(.settings.BUILD) .id')
 echo "Job ID: \$job_id"
 if [ -z \$job_id  ]; then echo "Unable to find a suitable job to clone from o3. The API query returned: \$resp" && false; fi
@@ -20,14 +20,14 @@ EOF
 sub full_run {
     # clone the latest "minimalx" job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
-    fetch_job_id('minimalx', 'NET', $openqa_url);
+    fetch_job_id(1, 'minimalx', 'NET', $openqa_url);
     assert_script_run("retry -e -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 120);
 }
 
 sub full_run_multimachine {
     # clone the latest "ping_client" MM job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
-    fetch_job_id('ping_client', 'DVD', $openqa_url);
+    fetch_job_id(1, 'ping_client', 'DVD', $openqa_url);
     assert_script_run("retry -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url \$job_id", timeout => 600);
 }
 
