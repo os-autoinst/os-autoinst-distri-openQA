@@ -14,7 +14,7 @@ echo "Job ID: \$job_id"
 if [ -z \$job_id  ]; then echo "Unable to find a suitable job to clone from o3. The API query returned: \$resp" && false; fi
 echo "Scenario: $arch-$ttest-$flavor: \$job_id"
 EOF
-    assert_script_run($_) foreach (split /\n/, $cmd);
+    assert_script_run($_, timeout => 90) foreach (split /\n/, $cmd);
 }
 
 sub full_run {
