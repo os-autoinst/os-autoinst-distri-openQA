@@ -14,7 +14,7 @@ sub run {
     # changes within the 10 minutes refresh dead-time applied by default in
     # /etc/zypp/zypp.conf so we need to refresh explicitly with retries in
     # case of problems.
-    assert_script_run('retry -e -s 30 -- sh -c "zypper ref && zypper -n in os-autoinst-distri-opensuse-deps"', 600);
+    install_packages('os-autoinst-distri-opensuse-deps');
     clear_root_console;
     # prepare for next test
     enter_cmd 'logout';

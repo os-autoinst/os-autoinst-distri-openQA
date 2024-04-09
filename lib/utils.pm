@@ -5,11 +5,16 @@ use Exporter;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(get_log clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name";
     upload_logs($name) unless $ret;
+}
+
+sub install_packages($packages, $timeout = undef) {
+    $timeout //= 600;
+    assert_script_run(qq{retry -e -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in $packages"}, $timeout);
 }
 
 sub clear_root_console {

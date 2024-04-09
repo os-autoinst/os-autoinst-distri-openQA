@@ -16,7 +16,7 @@ sub install_from_repos {
     $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
     my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
-    assert_script_run('retry -e -s 30 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in openQA-local-db '.$proxy_pkg.'"', 600);
+    install_packages("openQA-local-db $proxy_pkg");
     my $proxy_args = '';
     if (my $proxy = get_var('OPENQA_WEB_PROXY')) { $proxy_args = "--proxy=$proxy" }
     assert_script_run "/usr/share/openqa/script/configure-web-proxy $proxy_args";
@@ -60,12 +60,12 @@ sub install_from_git {
 }
 
 sub install_containers {
-    assert_script_run('retry -s 30 -- zypper -n in docker git', timeout => 600);
+    install_packages('docker git');
     assert_script_run('systemctl start docker');
 }
 
 sub install_from_bootstrap {
-    assert_script_run('zypper --no-cd -n in openQA-bootstrap');
+    install_packages('openQA-bootstrap');
     assert_script_run('skip_suse_specifics=1 skip_suse_tests=1 /usr/share/openqa/script/openqa-bootstrap', timeout => 1200);
 }
 
