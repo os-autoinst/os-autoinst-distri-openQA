@@ -13,7 +13,7 @@ sub get_log ($cmd, $name) {
 }
 
 sub install_packages($packages, $timeout = undef) {
-    $timeout //= 600;
+    $timeout //= 4000; # The maximum of the retry is 3810 seconds
     assert_script_run(qq{retry -e -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in $packages"}, $timeout);
 }
 
