@@ -13,17 +13,16 @@ machines:
   64bit-2G:
     backend: qemu
     settings:
-      HDDSIZEGB: "20"
-      QEMUCPU: host
+      <<: &machine_defaults
+        HDDSIZEGB: "20"
+        QEMUCPU: host
+        WORKER_CLASS: qemu_x86_64
       QEMURAM: "2048"
-      WORKER_CLASS: qemu_x86_64
   64bit-4G:
     backend: qemu
     settings:
-      HDDSIZEGB: "20"
-      QEMUCPU: host
+      <<: *machine_defaults
       QEMURAM: "4096"
-      WORKER_CLASS: qemu_x86_64
 
 .common: &common
   product: openqa-*-dev-x86_64
