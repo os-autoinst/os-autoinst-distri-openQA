@@ -16,6 +16,8 @@ sub run ($self) {
         assert_script_run q{retry -s 30 -r 5 -- sh -c 'openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"'}, 300;
     }
     save_screenshot;
+    assert_script_run q{retry -s 10 -r 6 -e -- sh -c 'test -f /var/lib/openqa/share/tests/*/.git/config'}, timeout => 600,
+        fail_message => 'the test distribution should be checked out by openQA automatically' unless get_var('OPENQA_FROM_GIT');
     clear_root_console;
 }
 

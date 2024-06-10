@@ -34,7 +34,7 @@ sub install_from_pkgs {
         assert_script_run 'systemctl restart apache2';
     }
     assert_script_run($_) foreach (split /\n/, <<~'EOF');
-    sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
+    sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' -e 's/#\[scm git\]/[scm git]/' -e 's/#git_auto_clone =.*$/git_auto_clone = yes/' /etc/openqa/openqa.ini
     systemctl enable --now openqa-webui
     systemctl status --no-pager openqa-webui
     systemctl enable --now openqa-scheduler
