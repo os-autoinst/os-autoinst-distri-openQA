@@ -1,6 +1,6 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils;
+use utils qw(install_packages get_log clear_root_console);
 
 
 sub install_from_repos {
@@ -57,7 +57,8 @@ sub install_from_git {
     EOF
     script_run('env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0);
     diag('Wait until the server is responsive');
-    assert_script_run('grep -qP "Listening at.*(127.0.0.1|localhost)" <(tail -F -n0 nohup.out) ', 600);
+    assert_script_run('grep -qP "Listening at.*(127.0.0.1|localhost)" <(tail -F nohup.out) ', 600);
+    get_log 'cat nohup.out' => 'openqa_nohup_out.txt';
 }
 
 sub install_containers {
