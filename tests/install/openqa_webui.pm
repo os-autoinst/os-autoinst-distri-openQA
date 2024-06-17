@@ -55,10 +55,13 @@ sub install_from_git {
     systemctl restart apache2 || systemctl status --no-pager apache2
     mkdir -p /var/lib/openqa/db
     EOF
+    my $sass = script_output 'perldoc -l Mojolicious::Plugin::AssetPack::Pipe::Sass';
+    script_run q{perl -pi -wE 's/\Q = (qw(sass -s)/ = (qw(sass -s --trace)/' } . $sass;
+    script_run qq{grep "sass -s" $sass};
     script_run('env OPENQA_CONFIG=etc/openqa nohup script/openqa daemon &', 0);
     diag('Wait until the server is responsive');
     assert_script_run('grep -qP "Listening at.*(127.0.0.1|localhost)" <(tail -F nohup.out) ', 600);
-    get_log 'cat nohup.out' => 'openqa_nohup_out.txt';
+    upload_logs('nohup.out', log_name => 'openqa_nohup_out.txt');
 }
 
 sub install_containers {
