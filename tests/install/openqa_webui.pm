@@ -13,7 +13,8 @@ sub install_from_repos {
         ppc64le => 'Factory_PowerPC'
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
-    $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
+    my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
+    $add_repo = "zypper -n ar -p 95 -f $repo_url openQA";
     assert_script_run($_) foreach (split /\n/, $add_repo);
     my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
     install_packages("openQA-local-db $proxy_pkg");
