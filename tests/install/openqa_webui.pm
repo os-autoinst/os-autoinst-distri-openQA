@@ -1,11 +1,9 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils qw(install_packages get_log clear_root_console);
+use utils qw(install_packages clear_root_console);
 
 
-sub install_from_repos {
-    diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
-    my $add_repo;
+sub add_repo {
     die 'Needs implementation for other versions' unless get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
     my %repo_suffix = (
         x86_64  => 'Tumbleweed',
@@ -13,8 +11,15 @@ sub install_from_repos {
         ppc64le => 'Factory_PowerPC'
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
-    $add_repo = "zypper -n ar -p 95 -f obs://devel:openQA/$repo openQA";
-    assert_script_run($_) foreach (split /\n/, $add_repo);
+    my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
+    assert_script_run($_, 600) foreach (split /\n/, <<~"EOF");
+    zypper -n ar -p 95 -f $repo_url openQA
+    retry -e -s 30 -- zypper -n --gpg-auto-import-keys ref
+    EOF
+}
+
+sub install_from_pkgs {
+    diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
     my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
     install_packages("openQA-local-db $proxy_pkg");
     my $proxy_args = '';
@@ -80,6 +85,7 @@ sub install_from_bootstrap {
 }
 
 sub run {
+    add_repo if get_var('ADD_OPENQA_REPO', !get_var('OPENQA_FROM_GIT') && !get_var('OPENQA_FROM_BOOTSTRAP'));
     if (get_var('OPENQA_FROM_GIT')) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
@@ -92,7 +98,7 @@ sub run {
         install_from_bootstrap;
     }
     else {
-        install_from_repos;
+        install_from_pkgs;
     }
     save_screenshot;
     clear_root_console;
