@@ -12,10 +12,8 @@ sub add_repo {
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
-    assert_script_run($_, 600) foreach (split /\n/, <<~"EOF");
-    zypper -n ar -p 95 -f $repo_url openQA
-    retry -e -s 30 -- zypper -n --gpg-auto-import-keys ref
-    EOF
+    assert_script_run("zypper -n ar -p 95 -f '$repo_url' openQA");
+    assert_script_run('retry -e -s 30 -r 7 -- zypper -n --gpg-auto-import-keys ref', timeout => 4000);
 }
 
 sub install_from_pkgs {
