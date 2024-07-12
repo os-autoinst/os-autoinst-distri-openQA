@@ -1,6 +1,6 @@
-use Mojo::Base 'openQAcoretest';
+use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
-use utils qw(install_packages clear_root_console);
+use utils qw(install_packages clear_root_console get_log);
 
 
 sub add_repo {
@@ -13,7 +13,7 @@ sub add_repo {
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
     assert_script_run("zypper -n ar -p 95 -f '$repo_url' openQA");
-    assert_script_run('retry -e -s 30 -r 7 -- zypper -n --gpg-auto-import-keys ref', timeout => 4000);
+    assert_script_run('zypper -n --gpg-auto-import-keys ref', timeout => 600);
 }
 
 sub install_from_pkgs {
@@ -100,6 +100,15 @@ sub run {
     }
     save_screenshot;
     clear_root_console;
+}
+
+sub post_fail_hook ($self) {
+    get_log 'tail -n 400 /var/log/zypper.log' => 'zypper.log.txt';
+    get_log 'ls -la /var/cache/zypp/raw/openQA/repodata/' => 'repodata.log.txt';
+    # "-vvv" added due to https://progress.opensuse.org/issues/163112
+    assert_script_run('zypper -n --gpg-auto-import-keys -vvv ref', timeout => 600);
+
+    $self->SUPER::post_fail_hook;
 }
 
 1;
