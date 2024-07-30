@@ -3,7 +3,6 @@ use Mojo::Base 'basetest', -signatures;
 use testapi;
 use utils qw(switch_to_root_console get_log);
 
-
 sub post_fail_hook ($self) {
     switch_to_root_console;
     send_key 'ctrl-c';     # Stop current command, if any
@@ -20,12 +19,18 @@ sub post_fail_hook ($self) {
     else {
         enter_cmd 'openqa-cli api jobs';
         save_screenshot;
-        get_log 'journalctl --pager-end --no-tail --no-pager -u apache2 -u nginx -u openqa-scheduler -u openqa-websockets -u openqa-webui -u openqa-worker@1' => 'openqa_services.log.txt';
-        get_log '(cat /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt ||:)' => 'autoinst-log.txt';
+        $self->upload_openqa_logs;
     }
 }
 
 # All steps belonging to core openQA functionality are 'fatal'. by default
 sub test_flags { {fatal => 1} }
+
+sub upload_openqa_logs {
+    get_log 'journalctl --pager-end --no-tail --no-pager -u apache2 -u nginx -u openqa-scheduler -u openqa-websockets -u openqa-webui -u openqa-gru -u openqa-worker@1' => 'openqa_services.log.txt';
+    chomp(my @logs = qx{find /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt});
+    @logs and get_log "(cat @logs ||:)" => 'autoinst-log.txt';
+    get_log '(find /var/lib/openqa/pool/ /var/lib/openqa/testresults/ ||:)' => 'find.txt';
+}
 
 1;
