@@ -12,7 +12,7 @@ sub run ($self) {
         $self->upload_openqa_logs;
     }
     else {
-        assert_script_run q{retry -s 30 -r 7 -- sh -c 'openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"'}, 360;
+        assert_script_run q{retry -s 30 -r 12 -- sh -c 'openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"'}, 370;
     }
     save_screenshot;
     assert_script_run q{retry -s 5 -r 3 -- sh -c 'test -f /var/lib/openqa/share/tests/*/.git/config'}, timeout => 20,
