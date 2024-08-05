@@ -31,6 +31,7 @@ sub upload_openqa_logs {
     chomp(my @logs = qx{find /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt});
     @logs and get_log "(cat @logs ||:)" => 'autoinst-log.txt';
     get_log '(find /var/lib/openqa/pool/ /var/lib/openqa/testresults/ ||:)' => 'find.txt';
+    get_log q|sudo -u geekotest /usr/share/openqa/script/openqa eval -V 'my $jobs = app->minion->jobs; my @r; while (my $j = $jobs->next) { push @r, $j->{result} }; \@r'| => 'openqa_minion_results.txt';
 }
 
 1;
