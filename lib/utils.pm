@@ -145,6 +145,9 @@ pref("datareporting.policy.firstRunURL", "");
 pref("messaging-system.rsexperimentloader.enabled", false);
 pref("privacy.restrict3rdpartystorage.rollout.enabledByDefault", false);
 pref("trailhead.firstrun.branches", "nofirstrun-empty");
+// More modal dialogs as of 2024-08 https://bugzilla.mozilla.org/show_bug.cgi?id=1904102#c11
+pref("browser.newtabpage.activity-stream.discoverystream.topicSelection.onboarding.enabled", false);
+pref("browser.newtabpage.activity-stream.discoverystream.topicSelection.onboarding.maybeDisplay", false);
 EOF
 });
 }
