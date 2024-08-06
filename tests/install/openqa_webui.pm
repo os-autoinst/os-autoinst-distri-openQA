@@ -104,7 +104,7 @@ sub run {
 
 sub post_fail_hook ($self) {
     get_log 'tail -n 50000 /var/log/zypper.log' => 'zypper.log.txt';
-    get_log 'ls -la /var/cache/zypp/raw/' => 'repodata.log.txt';
+    get_log 'ls -lRa /var/cache/zypp/raw/' => 'repodata.log.txt';
     assert_script_run('zypper -n --gpg-auto-import-keys ref', timeout => 600);
     get_log 'tail -n 800 /var/log/zypper.log' => 'zypper1.log.txt';
     get_log 'ls -lRa /var/cache/zypp/raw/' => 'repodata1.log.txt';
