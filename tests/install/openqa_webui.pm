@@ -83,7 +83,7 @@ sub install_from_bootstrap {
 }
 
 sub run {
-    add_repo if get_var('ADD_OPENQA_REPO', !get_var('OPENQA_FROM_GIT') && !get_var('OPENQA_FROM_BOOTSTRAP'));
+    add_repo if get_var('ADD_OPENQA_REPO', !get_var('OPENQA_FROM_GIT'));
     if (get_var('OPENQA_FROM_GIT')) {
         if (get_var('OPENQA_CONTAINERS')) {
             install_containers;
