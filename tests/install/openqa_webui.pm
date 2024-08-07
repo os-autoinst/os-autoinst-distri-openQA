@@ -13,7 +13,7 @@ sub add_repo {
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
     assert_script_run("zypper -n ar -p 95 -f '$repo_url' openQA");
-    assert_script_run('zypper -n --gpg-auto-import-keys ref', timeout => 600);
+    assert_script_run('retry -e -s 30 -r 7 -- zypper -n --gpg-auto-import-keys ref', timeout => 4000);
 }
 
 sub install_from_pkgs {
@@ -103,10 +103,11 @@ sub run {
 }
 
 sub post_fail_hook ($self) {
-    get_log 'tail -n 400 /var/log/zypper.log' => 'zypper.log.txt';
-    get_log 'ls -la /var/cache/zypp/raw/openQA/repodata/' => 'repodata.log.txt';
-    # "-vvv" added due to https://progress.opensuse.org/issues/163112
-    assert_script_run('zypper -n --gpg-auto-import-keys -vvv ref', timeout => 600);
+    get_log 'tail -n 50000 /var/log/zypper.log' => 'zypper.log.txt';
+    get_log 'ls -lRa /var/cache/zypp/raw/' => 'repodata.log.txt';
+    assert_script_run('zypper -n --gpg-auto-import-keys ref', timeout => 600);
+    get_log 'tail -n 800 /var/log/zypper.log' => 'zypper1.log.txt';
+    get_log 'ls -lRa /var/cache/zypp/raw/' => 'repodata1.log.txt';
 
     $self->SUPER::post_fail_hook;
 }
