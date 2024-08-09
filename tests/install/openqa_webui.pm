@@ -79,7 +79,8 @@ sub install_containers {
 
 sub install_from_bootstrap {
     install_packages('openQA-bootstrap');
-    assert_script_run('skip_suse_specifics=1 skip_suse_tests=1 /usr/share/openqa/script/openqa-bootstrap', timeout => 1200);
+    # The maximum of the retry is 3810 seconds
+    assert_script_run(qq{retry -e -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && skip_suse_specifics=1 skip_suse_tests=1 /usr/share/openqa/script/openqa-bootstrap"}, 4000);
 }
 
 sub run {
