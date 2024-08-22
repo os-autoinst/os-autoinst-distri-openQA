@@ -55,6 +55,7 @@ job_templates:
     settings:
       DESKTOP: minimalx
       OPENQA_WEB_PROXY: 'nginx'
+      USE_APPARMOR: "1"
   openqa_install_multimachine:
     <<: *common_4g
     settings:
