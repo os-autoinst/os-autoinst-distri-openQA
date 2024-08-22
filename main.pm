@@ -25,6 +25,7 @@ sub load_install_tests() {
     return 1 if get_var('OPENQA_FROM_GIT');
     loadtest 'install/openqa_worker' unless get_var('OPENQA_FROM_BOOTSTRAP');
     loadtest 'install/worker_ay_validation' if get_var('VALIDATE_AUTOYAST');
+    loadtest 'install/apparmor' if get_var('USE_APPARMOR');
     loadtest 'install/test_distribution';
 }
 
