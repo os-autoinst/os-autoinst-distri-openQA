@@ -50,6 +50,8 @@ job_templates:
     settings:
       DESKTOP: minimalx
       OPENQA_FROM_BOOTSTRAP: "1"
+      AUTOYAST: "https://raw.githubusercontent.com/os-autoinst/openQA/master/contrib/ay-openqa-worker.xml.erb"
+      VALIDATE_AUTOYAST: "1"
   openqa_install_nginx:
     <<: *common
     settings:
