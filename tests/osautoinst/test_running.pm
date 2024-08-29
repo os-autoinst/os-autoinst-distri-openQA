@@ -3,16 +3,18 @@ use testapi;
 use utils;
 
 sub run ($self) {
-    assert_script_run 'command -v ack >/dev/null || zypper --no-refresh -n in ack';
+    my $api_query = get_var('FULL_MM_TEST') ? 'test=ping_client' : 'state=running state=done';
+    my $success = get_var('FULL_MM_TEST') ? 'passed' : 'passed\|running';
+    assert_script_run qq{retry -s 30 -r 30 -- sh -c '
+        r=`openqa-cli api jobs $api_query | tee /dev/fd/2 |
+        jq -r ".jobs | max_by(.id) | if .result != \\"none\\" then .result else .state end"`;
+        echo \$r | grep -q "incomplete\\|failed" && killall retry;
+        echo \$r | grep -q "$success"'}, timeout => 930;
     if (get_var('FULL_MM_TEST')) {
-        assert_script_run q{retry -s 30 -r 30 -- sh -c 'r=`openqa-cli api jobs test=ping_client | jq -r ".jobs | max_by(.id) | if .result != \"none\" then .result else .state end"`; echo $r | ack "incomplete|failed" && killall retry; echo $r | ack --passthru passed'}, 930;
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
         script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
         $self->upload_mm_logs();
         $self->upload_openqa_logs;
-    }
-    else {
-        assert_script_run q{retry -s 30 -r 12 -- sh -c 'openqa-cli api jobs state=running state=done | ack --passthru --color "running|done"'}, 370;
     }
     save_screenshot;
     assert_script_run q{retry -s 5 -r 3 -- sh -c 'test -f /var/lib/openqa/share/tests/*/.git/config'}, timeout => 20,
