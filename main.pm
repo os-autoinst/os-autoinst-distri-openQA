@@ -46,6 +46,8 @@ sub load_openQA_tests() {
     else {
       loadtest 'openQA/dashboard';
       loadtest 'openQA/login';
+      # testing from git does not schedule tests so far
+      loadtest 'openQA/tests' unless get_var('OPENQA_FROM_GIT');
     }
 }
 
