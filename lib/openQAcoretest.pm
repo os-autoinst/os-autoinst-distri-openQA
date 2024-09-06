@@ -30,7 +30,7 @@ sub test_flags { {fatal => 1} }
 sub upload_openqa_logs {
     get_log 'journalctl --pager-end --no-tail --no-pager -u apache2 -u nginx -u openqa-scheduler -u openqa-websockets -u openqa-webui -u openqa-gru -u openqa-worker@1' => 'openqa_services.log.txt';
     get_log 'journalctl --pager-end --no-tail --no-pager' => 'journal.log.txt';
-    chomp(my @logs = qx{find /var/lib/openqa/pool/1/autoinst-log.txt /var/lib/openqa/testresults/*/*/autoinst-log.txt});
+    my @logs = split m/\n/, script_output q{find /var/lib/openqa -name autoinst-log.txt};
     @logs and get_log "(cat @logs ||:)" => 'autoinst-log.txt';
     get_log '(find /var/lib/openqa/pool/ /var/lib/openqa/testresults/ ||:)' => 'find.txt';
     get_log q|sudo -u geekotest /usr/share/openqa/script/openqa eval -V 'my $jobs = app->minion->jobs; my @r; while (my $j = $jobs->next) { push @r, $j->{result} }; \@r'| => 'openqa_minion_results.txt';
