@@ -7,6 +7,9 @@ sub run {
     send_key_until_needlematch 'openqa-scheduled-test', 'down';
     assert_and_click 'openqa-scheduled-test';
     assert_screen 'openqa-test-details';
+    assert_and_click 'openqa-dashboard';
+    wait_still_screen;
+    assert_screen 'openqa-dashboard';
 }
 
 1;
