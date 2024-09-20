@@ -11,6 +11,8 @@ sub run {
 sub post_fail_hook ($self) {
     save_screenshot;
     upload_logs 'docker_build.txt';
+    my $log = script_output('cat docker_build.txt');
+    record_info('docker build', $log, result => 'fail');
     $self->SUPER::post_fail_hook;
 }
 
