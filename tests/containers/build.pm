@@ -13,6 +13,8 @@ sub post_fail_hook ($self) {
     upload_logs 'docker_build.txt';
     my $log = script_output('cat docker_build.txt');
     record_info('docker build', $log, result => 'fail');
+    record_info('poo#165992', 'Valid metadata not found at specified URL: https://progress.opensuse.org/issues/165992', result => 'fail')
+        if $log =~ m/Valid metadata not found at specified URL/;
     $self->SUPER::post_fail_hook;
 }
 
