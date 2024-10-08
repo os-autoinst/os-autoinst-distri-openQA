@@ -13,7 +13,7 @@ $testapi::password //= 'nots3cr3t';
 
 sub loadtest ($test) {
     my $filename = $test =~ /\.p[my]$/ ? $test : $test . '.pm';
-    autotest::loadtest("/tests/$filename");
+    autotest::loadtest("tests/$filename");
 }
 
 sub load_install_tests() {
