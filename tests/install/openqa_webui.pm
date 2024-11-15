@@ -11,7 +11,8 @@ sub add_repo {
         ppc64le => 'Factory_PowerPC'
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
-    my $repo_url = get_var('OPENQA_REPO_URL', "obs://devel:openQA/$repo");
+    my $project = get_var('OPENQA_OBS_PROJECT', 'devel:openQA');
+    my $repo_url = get_var('OPENQA_REPO_URL', "obs://$project/$repo");
     assert_script_run("zypper -n ar -p 95 -f '$repo_url' openQA");
     assert_script_run('retry -e -s 30 -r 7 -- zypper -n --gpg-auto-import-keys ref', timeout => 4000);
 }
