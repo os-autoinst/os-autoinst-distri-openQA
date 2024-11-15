@@ -26,10 +26,11 @@ sub install_from_pkgs {
     assert_script_run "/usr/share/openqa/script/configure-web-proxy $proxy_args";
     if (check_var('OPENQA_WEB_PROXY', 'nginx')) {
         assert_script_run 'systemctl disable --now apache2';
+        assert_script_run 'systemctl enable nginx';
         assert_script_run 'systemctl restart nginx';
     }
     else {
-        assert_script_run '/usr/share/openqa/script/configure-web-proxy';
+        assert_script_run 'systemctl enable apache2';
         assert_script_run 'systemctl restart apache2';
     }
     assert_script_run($_) foreach (split /\n/, <<~'EOF');
