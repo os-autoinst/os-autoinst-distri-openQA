@@ -37,6 +37,7 @@ sub upload_openqa_logs {
     assert_script_run 'tar -cvzf testresults.tar.gz /var/lib/openqa/testresults/';
     upload_logs 'testresults.tar.gz';
     get_log q|sudo -u geekotest /usr/share/openqa/script/openqa eval -V 'my $jobs = app->minion->jobs; my @r; while (my $j = $jobs->next) { push @r, $j->{result} }; \@r'| => 'openqa_minion_results.txt';
+    get_log q{openqa-cli api jobs | jq .} => 'openqa-api-jobs.json';
 }
 
 1;
