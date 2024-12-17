@@ -34,7 +34,7 @@ sub upload_openqa_logs {
     my @logs = split m/\n/, script_output q{find /var/lib/openqa -name autoinst-log.txt};
     @logs and get_log "(cat @logs ||:)" => 'autoinst-log.txt';
     get_log '(find /var/lib/openqa/pool/ /var/lib/openqa/testresults/ ||:)' => 'find.txt';
-    assert_script_run 'tar -cvzf testresults.tar.gz /var/lib/openqa/testresults/';
+    script_run 'tar -cvzhf testresults.tar.gz /var/lib/openqa/testresults/';
     upload_logs 'testresults.tar.gz';
     get_log q|sudo -u geekotest /usr/share/openqa/script/openqa eval -V 'my $jobs = app->minion->jobs; my @r; while (my $j = $jobs->next) { push @r, $j->{result} }; \@r'| => 'openqa_minion_results.txt';
     get_log q{openqa-cli api jobs | jq .} => 'openqa-api-jobs.json';
