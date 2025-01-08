@@ -34,8 +34,9 @@ sub upload_openqa_logs {
     my @logs = split m/\n/, script_output q{find /var/lib/openqa -name autoinst-log.txt};
     @logs and get_log "(cat @logs ||:)" => 'autoinst-log.txt';
     get_log '(find /var/lib/openqa/pool/ /var/lib/openqa/testresults/ ||:)' => 'find.txt';
-    script_run 'tar -cvzhf testresults.tar.gz /var/lib/openqa/testresults/';
-    upload_logs 'testresults.tar.gz';
+    # do not assert for tar as it might return 1 due to the -h flag when dereferencing broken symlinks
+    script_run q{tar cahvf /tmp/testresults.tar.xz -C /var/lib/openqa/ testresults};
+    upload_logs "/tmp/testresults.tar.xz" if (script_run("test -f /tmp/testresults.tar.xz") == 0);
     get_log q|sudo -u geekotest /usr/share/openqa/script/openqa eval -V 'my $jobs = app->minion->jobs; my @r; while (my $j = $jobs->next) { push @r, $j->{result} }; \@r'| => 'openqa_minion_results.txt';
     get_log q{openqa-cli api jobs | jq .} => 'openqa-api-jobs.json';
 }

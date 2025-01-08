@@ -13,7 +13,6 @@ sub run ($self) {
     if (get_var('FULL_MM_TEST')) {
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
         script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
-        $self->upload_mm_logs();
         $self->upload_openqa_logs;
     }
     save_screenshot;
@@ -22,19 +21,12 @@ sub run ($self) {
     clear_root_console;
 }
 
-sub upload_mm_logs {
-    # do not assert for tar as it might return 1 due to the -h flag when dereferencing broken symlinks
-    script_run q{tar cJhvf /tmp/mm_testresults.txz -C /var/lib/openqa/ testresults};
-    upload_logs "/tmp/mm_testresults.txz" if (script_run("test -f /tmp/mm_testresults.txz") == 0);
-}
-
 sub post_fail_hook ($self) {
     $self->SUPER::post_fail_hook;
     script_run 'lsmod | grep kvm';
     save_screenshot;
     get_log('grep --color -z -E "(vmx|svm)" /proc/cpuinfo' => 'cpuinfo.txt');
     assert_script_run 'grep --color -z -E "(vmx|svm)" /proc/cpuinfo', fail_message => 'Machine does not support nested virtualization, please enable in worker host';
-    $self->upload_mm_logs() if get_var('FULL_MM_TEST');
 }
 
 sub test_flags {
