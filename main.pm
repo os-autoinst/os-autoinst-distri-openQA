@@ -63,7 +63,7 @@ sub load_shutdown() {
 load_install_tests();
 # testing from git only tests webui so far
 load_osautoinst_tests() unless get_var('OPENQA_FROM_GIT');
-load_openQA_tests() unless get_var('FULL_MM_TEST');
+load_openQA_tests();
 load_python_tests() if get_var('LOAD_PYTHON_TEST_MODULES', 1) && !get_var('FULL_MM_TEST');
 load_shutdown();
 
