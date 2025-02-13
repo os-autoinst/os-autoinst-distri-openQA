@@ -5,7 +5,7 @@ use Exporter;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name";
@@ -57,6 +57,15 @@ sub wait_for_desktop {
     assert_screen 'generic-desktop';
 }
 
+sub login {
+    switch_to_root_console;
+    assert_screen 'inst-console';
+    type_string "root\n";
+    assert_screen 'password-prompt';
+    type_password;
+    send_key 'ret';
+    wait_still_screen(2);
+}
 
 # if stay under tty console for long time, then check
 # screen lock is necessary when switch back to x11
