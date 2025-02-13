@@ -1,16 +1,6 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils qw(disable_packagekit switch_to_root_console);
-
-sub login {
-    switch_to_root_console;
-    assert_screen 'inst-console';
-    type_string "root\n";
-    assert_screen 'password-prompt';
-    type_password;
-    send_key 'ret';
-    wait_still_screen(2);
-}
+use utils qw(login disable_packagekit switch_to_root_console);
 
 sub run {
     login;
