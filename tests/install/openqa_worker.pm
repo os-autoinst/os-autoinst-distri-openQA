@@ -6,7 +6,7 @@ sub run {
     diag('worker setup');
     install_packages('openQA-worker', 3800);
     diag('Login once with fake authentication on openqa webUI to actually create preconfigured API keys for worker authentication');
-    assert_script_run('curl http://localhost/login');
+    assert_script_run('curl --fail-with-body http://localhost/login');
     diag('adding temporary, preconfigured API keys to worker config');
     type_string('cat >> /etc/openqa/client.conf <<EOF
 [localhost]
