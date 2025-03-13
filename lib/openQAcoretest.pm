@@ -21,7 +21,7 @@ sub post_fail_hook ($self) {
         save_screenshot;
         $self->upload_openqa_logs;
     }
-    get_log 'cat /var/log/audit/audit.log' => 'audit.log.txt' if get_var('USE_APPARMOR');
+    get_log 'cat /var/log/audit/audit.log' => 'audit.log.txt';
 }
 
 # All steps belonging to core openQA functionality are 'fatal'. by default
