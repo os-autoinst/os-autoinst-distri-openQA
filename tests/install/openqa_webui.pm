@@ -100,6 +100,10 @@ sub run {
     else {
         install_from_pkgs;
     }
+    unless (get_var('OPENQA_CONTAINERS')) {
+        # Verify that the web UI is available after installation
+        assert_script_run('curl --fail-with-body http://localhost/login');
+    }
     save_screenshot;
     clear_root_console;
 }
