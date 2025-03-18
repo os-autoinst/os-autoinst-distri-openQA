@@ -51,7 +51,7 @@ sub install_from_git {
     su - postgres -c 'createuser root'
     su - postgres -c 'createdb -O root openqa'
     cd openQA
-    pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -e -s 30 -- zypper -n in -C $pkgs
+    pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); ZYPP_PCK_PRELOAD=1 retry -e -s 30 -- zypper -n in -C $pkgs
     cpanm -nq --installdeps .
     npm install
     for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
