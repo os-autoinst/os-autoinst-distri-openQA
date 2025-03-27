@@ -12,7 +12,9 @@ sub add_repo {
     );
     my $repo = 'openSUSE_' . $repo_suffix{get_required_var('ARCH')};
     my $project = get_var('OPENQA_OBS_PROJECT', 'devel:openQA');
-    my $repo_url = get_var('OPENQA_REPO_URL', "obs://$project/$repo");
+
+    # Avoid using the redirector service to cope with transient repo content
+    my $repo_url = get_var('OPENQA_REPO_URL', "https://downloadcontent.opensuse.org/repositories/$project/$repo");
     assert_script_run("zypper -n ar -p 95 -f '$repo_url' openQA");
     assert_script_run('retry -e -s 30 -r 7 -- zypper -n --gpg-auto-import-keys ref', timeout => 4000);
 }
