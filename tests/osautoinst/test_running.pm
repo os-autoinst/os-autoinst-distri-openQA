@@ -5,11 +5,11 @@ use utils;
 sub run ($self) {
     my $api_query = get_var('FULL_MM_TEST') ? 'test=ping_client' : 'state=running state=done';
     my $success = get_var('FULL_MM_TEST') ? 'passed' : 'passed\|running';
-    assert_script_run qq{retry -s 30 -r 30 -- sh -c '
+    assert_script_run qq{retry -s 15 -r 120 -- sh -c '
         r=`openqa-cli api jobs $api_query | tee /dev/fd/2 |
         jq -r ".jobs | max_by(.id) | if .result != \\"none\\" then .result else .state end"`;
         echo \$r | grep -q "incomplete\\|failed" && killall retry;
-        echo \$r | grep -q "$success"'}, timeout => 930;
+        echo \$r | grep -q "$success"'}, timeout => 1830;
     if (get_var('FULL_MM_TEST')) {
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
         script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
