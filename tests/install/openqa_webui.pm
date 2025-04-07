@@ -36,7 +36,7 @@ sub install_from_pkgs {
         assert_script_run 'systemctl restart apache2';
     }
     assert_script_run($_) foreach (split /\n/, <<~'EOF');
-    sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini
+    if [ -e /etc/openqa/openqa.ini ]; then sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini; else echo -e "[auth]\nmethod = Fake" > /etc/openqa/openqa.ini.d/auth.ini; fi
     systemctl enable --now openqa-webui
     systemctl status --no-pager openqa-webui
     systemctl enable --now openqa-scheduler

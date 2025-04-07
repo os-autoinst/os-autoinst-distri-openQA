@@ -17,7 +17,8 @@ EOF
     if (get_var('FULL_MM_TEST')) {
         # add tap class to worker config
         my $arch = get_required_var('ARCH');
-        assert_script_run q{sed -i -e "s/\(\[global\]\)/\1\nWORKER_CLASS=qemu_}.$arch.q{,tap/" /etc/openqa/workers.ini};
+        my $class = "WORKER_CLASS=qemu_$arch,tap";
+        assert_script_run q{if [ -e /etc/openqa/workers.ini ]; then sed -i -e "s/\(\[global\]\)/\1\n$class/" /etc/openqa/workers.ini; else echo -e "[global]\n$class" > /etc/openqa/workers.ini.d/base.ini; fi};
     }
     assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
     my $worker_setup = <<'EOF';
