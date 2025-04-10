@@ -18,7 +18,7 @@ EOF
         # add tap class to worker config
         my $arch = get_required_var('ARCH');
         my $class = "WORKER_CLASS=qemu_$arch,tap";
-        assert_script_run q{if [ -e /etc/openqa/workers.ini ]; then sed -i -e "s/\(\[global\]\)/\1\n$class/" /etc/openqa/workers.ini; else echo -e "[global]\n$class" > /etc/openqa/workers.ini.d/base.ini; fi};
+        assert_script_run sprintf q{if [ -e /etc/openqa/workers.ini ]; then sed -i -e "s/\(\[global\]\)/\1\n%s/" /etc/openqa/workers.ini; else echo -e "[global]\n%s" > /etc/openqa/workers.ini.d/base.ini; fi}, $class, $class;
     }
     assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
     my $worker_setup = <<'EOF';
