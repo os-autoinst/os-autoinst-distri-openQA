@@ -52,15 +52,12 @@ job_templates:
       OPENQA_FROM_BOOTSTRAP: "1"
       AUTOYAST: "https://raw.githubusercontent.com/os-autoinst/openQA/master/contrib/ay-openqa-worker.xml.erb"
       VALIDATE_AUTOYAST: "1"
-  # Temporarily disable openqa_install_nginx
-  # https://progress.opensuse.org/issues/180002
-  # https://github.com/os-autoinst/os-autoinst-distri-openQA/pull/235
-  # openqa_install_nginx:
-  #   <<: *common
-  #   settings:
-  #     DESKTOP: minimalx
-  #     OPENQA_WEB_PROXY: 'nginx'
-  #     USE_APPARMOR: "1"
+  openqa_install_nginx:
+    <<: *common
+    settings:
+      DESKTOP: minimalx
+      OPENQA_WEB_PROXY: 'nginx'
+      USE_APPARMOR: "1"
   openqa_install_multimachine:
     <<: *common_4g
     settings:
