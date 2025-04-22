@@ -5,6 +5,7 @@ use utils;
 use OpenQA::Wheel::Launcher 'start_gui_program';
 
 sub run {
+    switch_to_root_console;
     prepare_firefox_autoconfig;
     switch_to_x11;
     ensure_unlocked_desktop();
