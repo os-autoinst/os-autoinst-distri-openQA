@@ -8,8 +8,11 @@ sub run {
     prepare_firefox_autoconfig;
     switch_to_x11;
     ensure_unlocked_desktop();
+    start_gui_program('firefox http://localhost', 60, valid => 1);
+    assert_screen 'openqa-dashboard', 60;
     start_gui_program('firefox http://127.0.0.1', 60, valid => 1);
-    #wait few minutes for ff to start and then fail the test
-    assert_screen 'openqa-dashboard', 600;
+    assert_screen 'openqa-dashboard', 60;
+    start_gui_program('firefox http://[::1]', 60, valid => 1);
+    assert_screen 'openqa-dashboard', 60;
 }
 1;
