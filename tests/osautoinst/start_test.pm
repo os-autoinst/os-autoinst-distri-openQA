@@ -51,4 +51,13 @@ sub run {
     clear_root_console;
 }
 
+sub post_fail_hook ($self) {
+    $self->SUPER::post_fail_hook;
+    get_log('ss -tlpen' => 'ss-tlpen.txt');
+    script_run 'curl -I http://localhost/';
+    script_run 'curl -I http://localhost:9526/';
+    get_log('systemctl status openqa-webui' => 'systemctl_status_openqa-webui.txt');
+    get_log('ausearch -m ALL' => 'audit_log.txt');
+}
+
 1;
