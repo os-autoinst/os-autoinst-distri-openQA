@@ -3,6 +3,10 @@ use testapi;
 use utils;
 
 sub run ($self) {
+    unless (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
+        record_info 'SKIPPED', 'module not ready for ' . get_required_var('VERSION');
+        return;
+    }
     my $api_query = get_var('FULL_MM_TEST') ? 'test=ping_client' : 'state=running state=done';
     my $success = get_var('FULL_MM_TEST') ? 'passed' : 'passed\|running';
     assert_script_run qq{retry -s 15 -r 120 -- sh -c '

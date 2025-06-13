@@ -5,7 +5,7 @@ use Exporter;
 use testapi;
 use File::Basename qw(basename);
 
-our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop wait_to_boot login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name";
@@ -32,10 +32,17 @@ sub switch_to_x11 {
     # older openSUSE Tumbleweed has x11 still on tty7
     # minimalx has x11 on tty7
     my $x11_tty = ($hdd[3] < 20190617 or check_var('DESKTOP', 'minimalx')) ? 'f7' : 'f2';
+    $x11_tty = 'f2' if (get_required_var('VERSION') =~ /sle/);
     send_key "ctrl-alt-$x11_tty";
 }
 
 sub handle_gui_password {
+    unless (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
+	if (assert_screen('username-prompt')) {
+	    type_string "root" ;
+	    send_key 'ret';
+	}
+    }
     assert_screen 'lockscreen-password-prompt';
     type_password;
     assert_screen 'lockscreen-typed-password';
@@ -55,6 +62,26 @@ sub wait_for_desktop {
     }
     handle_gui_password;
     assert_screen 'generic-desktop';
+}
+
+# sle
+sub wait_to_boot {
+    assert_screen('boot-menu');
+    send_key 'ret' if match_has_tag('boot-menu');
+    send_key 'ret' if assert_screen('first-boot');
+    send_key 'ret' if assert_screen('firstboot-lang');
+    send_key 'ret' if assert_screen('firstboot-licence');
+    send_key 'ret' if assert_screen('firstboot-uela-confirm');
+    send_key 'ret' if assert_screen('firstboot-utc');
+    type_password;send_key 'ret';
+    type_password if assert_screen('passwd-prompt');
+    send_key 'ret';
+    send_key 'ret' if assert_screen('firstboot-scc-ok');
+
+    #while (!match_has_tag('openqa-console')) {
+        send_key 'ret' if match_has_tag('first-boot');
+    #}
+    assert_screen 'openqa-console', 500;
 }
 
 sub login {
