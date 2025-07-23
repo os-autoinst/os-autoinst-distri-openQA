@@ -9,7 +9,7 @@ sub fetch_job_id($groupid, $ttest, $flavor, $openqa_url) {
 set -o pipefail
 zypper -n in jq
 resp=\$(OPENQA_CLI_RETRIES=6 OPENQA_CLI_RETRY_FACTOR=2 openqa-cli api --host $openqa_url jobs version=Tumbleweed scope=relevant arch='$arch' flavor=$flavor test='$ttest' groupid=$groupid latest=1)
-job_id=\$(echo "\$resp" | jq -r '.jobs | map(select(.result == "passed")) | max_by(.settings.BUILD) .id')
+job_id=\$(echo "\$resp" | jq -r '.jobs | map(select(.result == "passed")) | map(select (.settings.BUILD | match("^[0-9]+\$"))) | max_by(.settings.BUILD) .id')
 echo "Job ID: \$job_id"
 if [ -z \$job_id  ]; then echo "Unable to find a suitable job to clone from o3. The API query returned: \$resp" && false; fi
 echo "Scenario: $arch-$ttest-$flavor: \$job_id"
