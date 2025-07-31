@@ -20,9 +20,12 @@ EOF
         my $class = "WORKER_CLASS=qemu_$arch,tap";
         assert_script_run sprintf q{if [ -e /etc/openqa/workers.ini ]; then sed -i -e "s/\(\[global\]\)/\1\n%s/" /etc/openqa/workers.ini; else echo -e "[global]\n%s" > /etc/openqa/workers.ini.d/base.ini; fi}, $class, $class;
     }
-    assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
+    if (get_var('FULL_MM_TEST')) {
+        assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
+        my $systemctl_openvswitch = 'systemctl status --no-pager os-autoinst-openvswitch';
+    }
     my $worker_setup = <<'EOF';
-systemctl status --no-pager os-autoinst-openvswitch
+$systemctl_openvswitch
 systemctl enable --now openqa-worker@1
 systemctl status --no-pager openqa-worker@1
 EOF
