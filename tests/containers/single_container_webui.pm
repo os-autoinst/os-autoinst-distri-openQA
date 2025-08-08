@@ -12,7 +12,7 @@ sub run {
   wait_for_container_log('openqa_webui', 'Web application available at', 'docker');
 
   assert_script_run('curl http://localhost');
-  assert_script_run('docker rm -f openqa_webui');
+  #assert_script_run('docker rm -f openqa_webui');
 }
 
 sub post_fail_hook {
