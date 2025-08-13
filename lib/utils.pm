@@ -157,6 +157,10 @@ pref("trailhead.firstrun.branches", "nofirstrun-empty");
 // More modal dialogs as of 2024-08 https://bugzilla.mozilla.org/show_bug.cgi?id=1904102#c11
 pref("browser.newtabpage.activity-stream.discoverystream.topicSelection.onboarding.enabled", false);
 pref("browser.newtabpage.activity-stream.discoverystream.topicSelection.onboarding.maybeDisplay", false);
+// AI Chatbot
+pref("browser.ml.chat.enabled", false);
+pref("browser.ml.chat.shortcuts", false);
+pref("browser.ml.enable", false);
 EOF
 });
 }
