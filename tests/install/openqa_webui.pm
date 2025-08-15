@@ -35,6 +35,10 @@ sub install_from_pkgs {
         assert_script_run 'systemctl enable apache2';
         assert_script_run 'systemctl restart apache2';
     }
+    if (get_var('FULL_OPENSUSE_TEST')) {
+        # avoid second git fetch after fetchneedles
+        assert_script_run q{if [ -e /etc/openqa/openqa.ini ]; then sed -i -e 's/#\[scm git\]/[scm git]\ngit_auto_clone = no\ngit_auto_update = no/' /etc/openqa/openqa.ini; else echo -e "[scm git]\ngit_auto_clone = no\ngit_auto_update = no" > /etc/openqa/openqa.ini.d/git.ini; fi};
+    }
     assert_script_run($_) foreach (split /\n/, <<~'EOF');
     if [ -e /etc/openqa/openqa.ini ]; then sed -i -e 's/#.*method.*OpenID.*$/&\nmethod = Fake/' /etc/openqa/openqa.ini; else echo -e "[auth]\nmethod = Fake" > /etc/openqa/openqa.ini.d/auth.ini; fi
     systemctl enable --now openqa-webui
