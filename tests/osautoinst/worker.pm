@@ -3,7 +3,7 @@ use testapi;
 use utils qw(wait_for_desktop switch_to_root_console clear_root_console);
 
 sub run {
-    wait_for_desktop;
+    wait_for_desktop if get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
     switch_to_root_console;
     assert_screen 'inst-console';
     type_string "root\n";

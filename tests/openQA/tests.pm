@@ -3,6 +3,10 @@ use testapi;
 use utils;
 
 sub visit_test($needle) {
+    unless (get_required_var('VERSION') =~ /(tw|Tumbleweed)/) {
+        record_soft_failure 'SKIPPED - module not ready for ' . get_required_var('VERSION');
+        return;
+    }
     assert_and_click 'openqa-all-tests';
     send_key_until_needlematch $needle, 'down';
     assert_and_click $needle;

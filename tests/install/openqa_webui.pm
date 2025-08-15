@@ -4,7 +4,7 @@ use utils qw(install_packages clear_root_console get_log);
 
 
 sub add_repo {
-    die 'Needs implementation for other versions' unless get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
+    #die 'Needs implementation for other versions' unless get_required_var('VERSION') =~ /(tw|Tumbleweed)/;
     my %repo_suffix = (
         x86_64  => 'Tumbleweed',
         aarch64 => 'Factory_ARM',
@@ -21,7 +21,7 @@ sub add_repo {
 
 sub install_from_pkgs {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
-    my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
+    my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : 'apache2';
     install_packages("openQA-local-db $proxy_pkg");
     my $proxy_args = '';
     if (my $proxy = get_var('OPENQA_WEB_PROXY')) { $proxy_args = "--proxy=$proxy" }
