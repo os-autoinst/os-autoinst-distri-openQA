@@ -5,7 +5,7 @@ use utils;
 sub visit_test($needle) {
     assert_and_click 'openqa-all-tests';
     send_key_until_needlematch $needle, 'down';
-    assert_and_click $needle;
+    click_lastmatch;
     assert_screen 'openqa-test-details';
     assert_and_click 'openqa-logo';
     assert_screen 'openqa-dashboard';
