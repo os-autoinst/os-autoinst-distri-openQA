@@ -10,15 +10,18 @@ products:
       NEEDLES_DIR: "https://github.com/os-autoinst/os-autoinst-needles-openQA"
 
 machines:
-  64bit-2G:
+  uefi-2G:
     backend: qemu
     settings:
       <<: &machine_defaults
         HDDSIZEGB: "20"
         QEMUCPU: host
         WORKER_CLASS: qemu_x86_64
+        UEFI: '1'
+        UEFI_PFLASH_CODE: /usr/share/qemu/ovmf-x86_64-ms-code.bin
+        UEFI_PFLASH_VARS: ovmf-x86_64-ms-vars-800x600.qcow2
       QEMURAM: "2048"
-  64bit-4G:
+  uefi-4G:
     backend: qemu
     settings:
       <<: *machine_defaults
@@ -26,11 +29,11 @@ machines:
 
 .common: &common
   product: openqa-*-dev-x86_64
-  machine: 64bit-2G
+  machine: uefi-2G
 
 .common_4g: &common_4g
   product: openqa-*-dev-x86_64
-  machine: 64bit-4G
+  machine: uefi-4G
 
 job_templates:
   openqa_from_git:
