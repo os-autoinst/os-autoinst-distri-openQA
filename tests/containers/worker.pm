@@ -3,10 +3,8 @@ use testapi;
 use utils;
 
 sub run {
-    #my $apikey = '1234567890ABCDEF';
-    #my $apikey = '1234567890ABCDEF';
     my $volumes = '-v "/root/data/factory:/data/factory" -v "/root/data/tests:/data/tests" -v "/root/openQA/container/openqa_data/data.template/conf/:/data/conf:ro"';
-    script_output(
+    script_run(
         "echo  \"\$(cat <<EOF
 [openqa_webui]
 key = 1234567890ABCDEF
@@ -16,21 +14,18 @@ secret = 1234567890ABCDEF
 key = 1234567890ABCDEF
 secret = 1234567890ABCDEF
 EOF
-        )\"  > /root/openQA/container/openqa_data/data.template/conf/client.conf"
-	);
-    script_output(
+)\" > /root/openQA/container/openqa_data/data.template/conf/client.conf");
+
+    script_run(
         "echo  \"\$(cat <<EOF
 [global]
 BACKEND = qemu
-HOST = http://openqa_webui
+HOST = openqa_webui
 WORKER_HOSTNAME = openqa_worker
 EOF
-        )\"  > /root/openQA/container/openqa_data/data.template/conf/workers.ini"
-	);
-    assert_script_run("docker run -d --network testing $volumes --name openqa_worker openqa_worker");
-    my $expected_log = 'Failed to register';
-    wait_for_container_log('openqa_worker', 'Failed to register', 'docker');
-    record_info("$expected_log", 'https://progress.opensuse.org/issues/186651', result => 'softfail');
+)\" > /root/openQA/container/openqa_data/data.template/conf/workers.ini");
+    assert_script_run(qq{docker run -d --network testing $volumes --entrypoint sh --hostname openqa_worker --name openqa_worker openqa_worker -c "curl -v http://openqa_webui/login && ./run_openqa_worker.sh"});
+    wait_for_container_log('openqa_worker', 'Registered and connected', 'docker');
     clear_root_console;
 }
 
