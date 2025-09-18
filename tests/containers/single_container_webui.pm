@@ -3,26 +3,7 @@ use testapi;
 use utils;
 
 sub run {
-  script_run(
-        "echo  \"\$(cat <<EOF
-[localhost]
-key = 1234567890ABCDEF
-secret = 1234567890ABCDEF
-
-[scheduler]
-key = 1234567890ABCDEF
-secret = 1234567890ABCDEF
-
-[websockets]
-key = 1234567890ABCDEF
-secret = 1234567890ABCDEF
-
-[openqa_webui]
-key = 1234567890ABCDEF
-secret = 1234567890ABCDEF
-EOF
-)\" > /root/openQA/container/webui/conf/client.conf");
-  script_run(
+  assert_script_run(
         "echo  \"\$(cat <<EOF
 [global]
 # change to the URL the web UI will be available under so redirection for
@@ -31,12 +12,6 @@ base_url = http://openqa_webui
 
 [auth]
 method = Fake
-
-[logging]
-level = debug
-
-[openid]
-httpsonly = 0
 EOF
 )\" > /root/openQA/container/webui/conf/openqa.ini");
 
@@ -47,11 +22,7 @@ EOF
 
   assert_script_run("docker run -d --network testing $volumes $certificates -p 80:80 --hostname openqa_webui --name openqa_webui openqa_webui");
   wait_for_container_log('openqa_webui', 'Web application available at', 'docker');
-
   assert_script_run('curl http://localhost');
-  assert_script_run(qq{docker exec openqa_webui sed -i "s/#ServerName your.server.name/ServerName openqa_webui/" /etc/apache2/vhosts.d/openqa.conf});
-  assert_script_run(qq{docker exec openqa_webui sh -c 'echo "ServerName openqa_webui" >> /etc/apache2/httpd.conf'});
-  assert_script_run(qq{docker exec openqa_webui apache2ctl restart});
 }
 
 sub post_fail_hook {
