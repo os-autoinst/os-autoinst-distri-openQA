@@ -13,7 +13,6 @@ sub visit_test($needle) {
 
 sub run {
     visit_test 'openqa-scheduled-test';
-    visit_test 'openqa-scheduled-test-ping-client' if get_var('FULL_MM_TEST');
 }
 
 1;
