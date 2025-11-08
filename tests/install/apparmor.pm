@@ -3,7 +3,7 @@ use testapi;
 use utils qw(login install_packages wait_for_desktop);
 
 sub enable_apparmor {
-    assert_script_run('sed -i -e "s/^GRUB_CMDLINE_LINUX_DEFAULT=\"[^\"]\+/& security=apparmor apparmor=1/" /etc/default/grub');
+    assert_script_run('sed -i -e "s/^..*$/& security=apparmor apparmor=1/" /etc/kernel/cmdline');
     assert_script_run('update-bootloader');
     assert_script_run('systemctl reboot');
     wait_for_desktop;
