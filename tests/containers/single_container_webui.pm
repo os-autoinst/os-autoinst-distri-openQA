@@ -4,7 +4,7 @@ use utils;
 
 sub run {
   my $volumes = '-v "/root/data/factory:/data/factory" -v "/root/data/tests:/data/tests" -v "/root/openQA/container/webui/conf:/data/conf:ro"';
-  my $certificates = '-v "/root/server.crt:/etc/apache2/ssl.crt/server.crt" -v "/root/server.crt:/etc/apache2/ssl.crt/ca.crt" -v "/root/server.key:/etc/apache2/ssl.key/server.key"';
+  my $certificates = '-v "/root/server.crt:/etc/apache2/ssl.crt/server.crt:z" -v "/root/server.crt:/etc/apache2/ssl.crt/ca.crt:z" -v "/root/server.key:/etc/apache2/ssl.key/server.key:z"';
 
   assert_script_run("openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -subj '/CN=www.mydom.com/O=My Company Name LTD./C=DE' -out server.crt -keyout server.key");
 
