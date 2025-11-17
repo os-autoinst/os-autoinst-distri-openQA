@@ -162,11 +162,17 @@ pref("browser.ml.chat.enabled", false);
 pref("browser.ml.chat.shortcuts", false);
 pref("browser.ml.chat.shortcuts.custom", false);
 pref("browser.ml.chat.sidebar", false);
+pref("browser.ml.chat.menu", false);
+pref("browser.ml.chat.page", false);
 pref("browser.ml.enable", false);
 pref("extensions.ml.enabled", false);
 pref("browser.tabs.groups.smart.enabled", false);
 pref("browser.tabs.groups.smart.optin", false);
 pref("browser.tabs.groups.smart.userEnabled", false);
+pref("extensions.ml.enabled", false);
+pref("browser.ml.linkPreview.enabled", false);
+pref("pdfjs.enableAltTextModelDownload", false);
+pref("pdfjs.enableGuessAltText", false);
 
 EOF
 });
