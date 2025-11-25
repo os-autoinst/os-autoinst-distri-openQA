@@ -1,6 +1,6 @@
 ---
 products:
-  openqa-*-dev-x86_64:
+  openqa-*-dev-x86_64: &default_product
     distri: openqa
     flavor: dev
     arch: x86_64
@@ -8,6 +8,10 @@ products:
     settings:
       CASEDIR: "https://github.com/os-autoinst/os-autoinst-distri-openQA"
       NEEDLES_DIR: "https://github.com/os-autoinst/os-autoinst-needles-openQA"
+  
+  openqa-*-dev-full-x86_64:
+    <<: *default_product
+    flavor: dev-full
 
 machines:
   uefi-4G:
@@ -63,3 +67,11 @@ job_templates:
       DESKTOP: minimalx
       PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%.qcow2'
       PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-uefi-vars.qcow2'
+  openqa_install_full+publish:
+    <<: *common
+    product: openqa-*-dev-full-x86_64
+    settings:
+      DESKTOP: minimalx
+      FULL: '1'
+      PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-full.qcow2'
+      PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-full-uefi-vars.qcow2'
