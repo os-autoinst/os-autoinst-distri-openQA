@@ -72,6 +72,6 @@ job_templates:
     product: openqa-*-dev-full-x86_64
     settings:
       DESKTOP: minimalx
-      FULL: '1'
+      FULL_OPENSUSE_TEST: '1'
       PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-full.qcow2'
       PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-full-uefi-vars.qcow2'
