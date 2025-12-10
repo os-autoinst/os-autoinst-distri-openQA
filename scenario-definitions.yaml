@@ -21,8 +21,6 @@ machines:
       QEMUCPU: host
       WORKER_CLASS: qemu_x86_64
       UEFI: '1'
-      UEFI_PFLASH_CODE: /usr/share/qemu/ovmf-x86_64-ms-code.bin
-      UEFI_PFLASH_VARS: ovmf-x86_64-ms-vars-800x600.qcow2
       QEMURAM: "4096"
 
 .common: &common
