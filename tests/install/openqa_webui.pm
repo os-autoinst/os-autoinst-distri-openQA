@@ -52,10 +52,11 @@ sub install_from_git {
     systemctl start postgresql || systemctl status --no-pager postgresql
     su - postgres -c 'createuser root'
     su - postgres -c 'createdb -O root openqa'
+    which make || retry -e -s 20 -r 4 -- sudo zypper -n in make
     cd openQA
     pkgs=$(for p in $(cpanfile-dump); do echo -n "perl($p) "; done); retry -e -s 30 -- zypper -n in -C $pkgs
-    cpanm -nq --installdeps .
-    npm install
+    retry -e -s 20 -r 4 -- cpanm -nq --installdeps .
+    retry -e -s 30 -r 7 -- make node_modules
     for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
     cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
     sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
