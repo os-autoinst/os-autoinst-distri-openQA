@@ -60,6 +60,7 @@ sub install_from_git {
     for i in headers proxy proxy_http proxy_wstunnel rewrite ; do a2enmod $i ; done
     cp etc/apache2/vhosts.d/openqa-common.inc /etc/apache2/vhosts.d/
     sed "s/#ServerName.*$/ServerName $(hostname)/" etc/apache2/vhosts.d/openqa.conf.template > /etc/apache2/vhosts.d/openqa.conf
+    semanage boolean -m -1 httpd_can_network_connect
     systemctl restart apache2 || systemctl status --no-pager apache2
     mkdir -p /var/lib/openqa/db
     EOF
