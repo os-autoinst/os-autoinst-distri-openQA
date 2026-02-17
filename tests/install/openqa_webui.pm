@@ -21,8 +21,13 @@ sub add_repo {
 
 sub install_from_pkgs {
     diag('following https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc');
-    my $proxy_pkg = (check_var('OPENQA_WEB_PROXY', 'nginx')) ? 'nginx' : '';
-    install_packages("openQA-local-db $proxy_pkg");
+    my @pkgs = ('openQA-local-db');
+    push @pkgs, 'nginx' if check_var('OPENQA_WEB_PROXY', 'nginx');
+    # Add the openQA-mcp package during the O3 installation tests to allow 
+    # enabling the MCP server in the openQA instance, inside the uefi image
+    # made available at end of the install+publish tests openQA-in-openQA.
+    push @pkgs, 'openQA-mcp' if get_var('PUBLISH_HDD_1');
+    install_packages("@pkgs");
     my $proxy_args = '';
     if (my $proxy = get_var('OPENQA_WEB_PROXY')) { $proxy_args = "--proxy=$proxy" }
     assert_script_run "/usr/share/openqa/script/configure-web-proxy $proxy_args";
