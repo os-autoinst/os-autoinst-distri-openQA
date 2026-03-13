@@ -2,6 +2,8 @@ use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
 use utils;
 
+use constant CLONE_ARGS => 'ASSET_1= ASSET_2= ASSET_256= ASSET_LIBVIRT= ASSET_VIRTUALBOX= ISO=';
+
 sub fetch_job_id($groupid, $ttest, $flavor, $openqa_url) {
     # Stores the job id of the latest $ttest job for the most recent Tumbleweed build with matching architecture in $job_id on the shell on the SUT
     my $arch = get_var('ARCH');
@@ -21,14 +23,14 @@ sub full_run {
     # clone the latest "minimalx" job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
     fetch_job_id(1, 'minimalx', 'NET', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 300);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url \$job_id " . CLONE_ARGS, timeout => 300);
 }
 
 sub full_run_multimachine {
     # clone the latest "ping_client" MM job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
     fetch_job_id(1, 'ping_client', 'DVD', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url \$job_id", timeout => 600);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url \$job_id " . CLONE_ARGS, timeout => 600);
 }
 
 sub example_run {
