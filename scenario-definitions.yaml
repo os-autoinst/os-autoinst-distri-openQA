@@ -22,6 +22,8 @@ machines:
       WORKER_CLASS: qemu_x86_64
       UEFI: '1'
       QEMURAM: "4096"
+      UEFI_PFLASH_CODE: '/usr/share/qemu/ovmf-x86_64-ms-4m-code.bin'
+      UEFI_PFLASH_VARS: '/usr/share/qemu/ovmf-x86_64-ms-4m-vars.bin'
 
 .common: &common
   product: openqa-*-dev-x86_64
