@@ -1,4 +1,5 @@
 use Mojo::Base 'openQAcoretest', -signatures;
+use backend::qemu;
 use testapi;
 use utils;
 
@@ -17,18 +18,26 @@ EOF
     assert_script_run($_, $_ =~ m/openqa-cli/ ? (timeout => 300) : ()) foreach (split /\n/, $cmd);
 }
 
+sub _uefi_pflash_settings {
+    my $ovmf_pflash_code = backend::qemu::find_ovmf;
+    my $ovmf_pflash_vars = $ovmf_pflash_code =~ s/-code/-vars/r;
+    return "UEFI_PFLASH_CODE=$ovmf_pflash_code UEFI_PFLASH_VARS=$ovmf_pflash_vars";
+}
+
 sub full_run {
     # clone the latest "minimalx" job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
+    my $pflash_settings = _uefi_pflash_settings;
     fetch_job_id(1, 'minimalx', 'NET', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url \$job_id", timeout => 300);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 300);
 }
 
 sub full_run_multimachine {
     # clone the latest "ping_client" MM job for the most recent Tumbleweed build with matching architecture
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
+    my $pflash_settings = _uefi_pflash_settings;
     fetch_job_id(1, 'ping_client', 'DVD', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url \$job_id", timeout => 600);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 600);
 }
 
 sub example_run {
