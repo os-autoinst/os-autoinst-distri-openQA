@@ -53,6 +53,8 @@ sub load_openQA_tests() {
 
 sub load_python_tests() {
     loadtest 'openQA/search.py';
+    loadtest 'openQA/worker_sec_checks' if get_var('CONFINED_WORKER_TEST');
+
 }
 
 sub load_shutdown() {
