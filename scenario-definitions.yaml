@@ -53,21 +53,21 @@ job_templates:
       DESKTOP: minimalx
       OPENQA_WEB_PROXY: 'nginx'
       USE_APPARMOR: "1"
-      START_AFTER: "openqa_from_bootstrap"
+      START_AFTER_TEST: "openqa_from_bootstrap"
   openqa_install_multimachine:
     <<: *common
     settings:
       DESKTOP: minimalx
       FULL_OPENSUSE_TEST: "1"
       FULL_MM_TEST: "1"
-      START_AFTER: "openqa_from_bootstrap"
+      START_AFTER_TEST: "openqa_from_bootstrap"
   openqa_install+publish:
     <<: *common
     settings:
       DESKTOP: minimalx
       PUBLISH_HDD_1: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%.qcow2'
       PUBLISH_PFLASH_VARS: 'opensuse-Tumbleweed-%ARCH%@%MACHINE%-%BUILD%-uefi-vars.qcow2'
-      START_AFTER: "openqa_from_bootstrap"
+      START_AFTER_TEST: "openqa_from_bootstrap"
   openqa_install_full+publish:
     <<: *common
     product: openqa-*-dev-full-x86_64
