@@ -22,7 +22,7 @@ sub visit_test($needle) {
 }
 
 sub run {
-    visit_test 'openqa-scheduled-test';
+    visit_test 'openqa-present-test';
 }
 
 1;
