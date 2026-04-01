@@ -64,7 +64,10 @@ sub login {
     assert_screen 'password-prompt';
     type_password;
     send_key 'ret';
-    wait_still_screen(2);
+    # Ensure shell is reached by waiting for a custom marker on serial
+    enter_cmd "echo LOGIN_DONE > /dev/$testapi::serialdev";
+    wait_serial 'LOGIN_DONE';
+    assert_screen 'root-console';
 }
 
 # if stay under tty console for long time, then check
