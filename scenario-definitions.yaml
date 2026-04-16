@@ -8,6 +8,7 @@ products:
     settings:
       CASEDIR: "https://github.com/os-autoinst/os-autoinst-distri-openQA"
       NEEDLES_DIR: "https://github.com/os-autoinst/os-autoinst-needles-openQA"
+      LLM_FAILURE_ANALYSIS: "1"
   
   openqa-*-dev-full-x86_64:
     <<: *default_product
