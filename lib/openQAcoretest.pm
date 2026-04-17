@@ -1,10 +1,13 @@
 package openQAcoretest;
 use Mojo::Base 'basetest', -signatures;
 use testapi;
-use utils qw(switch_to_root_console get_log);
+use utils qw(login switch_to_root_console get_log);
 
 sub post_fail_hook ($self) {
     switch_to_root_console;
+    # we may not be logged in yet
+    assert_screen([qw/root-console inst-console/]);
+    login if match_has_tag('inst-console');
     send_key 'ctrl-c';     # Stop current command, if any
     # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
     script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
