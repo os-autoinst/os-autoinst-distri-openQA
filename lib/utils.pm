@@ -43,9 +43,10 @@ sub handle_gui_password {
 }
 
 sub wait_for_desktop {
-    assert_screen([qw/boot-menu openqa-desktop/], 500);
+    my $boot_timeout = 500;
+    assert_screen([qw/boot-menu openqa-desktop/], $boot_timeout);
     send_key 'ret' if match_has_tag('boot-menu');
-    assert_screen 'openqa-desktop', 500;
+    assert_screen('openqa-desktop', $boot_timeout) unless match_has_tag('openqa-desktop');
     return if match_has_tag('generic-desktop');
     if (match_has_tag('openqa-desktop-locked')) {
         send_key 'esc';
