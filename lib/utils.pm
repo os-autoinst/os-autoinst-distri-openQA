@@ -43,9 +43,8 @@ sub handle_gui_password {
 }
 
 sub wait_for_desktop {
-    assert_screen([qw/boot-menu openqa-desktop/], 500);
+    assert_screen([qw/boot-menu openqa-desktop/], 200);
     send_key 'ret' if match_has_tag('boot-menu');
-    assert_screen 'openqa-desktop', 500;
     return if match_has_tag('generic-desktop');
     if (match_has_tag('openqa-desktop-locked')) {
         send_key 'esc';
