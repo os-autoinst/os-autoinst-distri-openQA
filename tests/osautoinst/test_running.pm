@@ -12,7 +12,7 @@ sub run ($self) {
         echo \$r | grep -q "$success"'}, timeout => 1830;
     if (get_var('FULL_MM_TEST')) {
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
-        script_run 'ip a del 10.0.2.2/15 dev br1'; # This may fail in case this IP is not actually set on the bridge
+        script_run 'ip link show br1 && ip a del 10.0.2.2/15 dev br1';
         $self->upload_openqa_logs;
     }
     save_screenshot;
