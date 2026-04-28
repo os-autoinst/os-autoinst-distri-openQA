@@ -30,6 +30,11 @@ EOF
     assert_script_run "systemctl enable --now openqa-worker@2" if get_var('FULL_MM_TEST');
     save_screenshot;
     clear_root_console;
+    if (script_run('systemctl is-active NetworkManager.service') == 0) {
+        assert_script_run('systemctl reboot');
+        wait_for_desktop;
+        login;
+    }
 }
 
 1;
