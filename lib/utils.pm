@@ -8,7 +8,7 @@ use File::Basename qw(basename);
 our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
-    my $ret = script_run "$cmd | tee $name";
+    my $ret = script_run "$cmd | tee $name", timeout => 300;
     upload_logs($name) unless $ret;
 }
 
