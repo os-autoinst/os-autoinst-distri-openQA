@@ -1,6 +1,6 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils qw(login disable_packagekit switch_to_root_console);
+use utils qw(login disable_packagekit);
 
 sub run {
     login;

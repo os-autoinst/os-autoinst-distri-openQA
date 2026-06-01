@@ -3,9 +3,8 @@ package utils;
 use Mojo::Base 'Exporter', -signatures;
 use Exporter;
 use testapi;
-use File::Basename qw(basename);
 
-our @EXPORT = qw(get_log install_packages clear_root_console switch_to_root_console switch_to_x11 wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT = qw(get_log install_packages clear_root_console wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name", timeout => 300;
@@ -21,18 +20,6 @@ sub clear_root_console {
     enter_cmd 'clear';
     enter_cmd 'cd';
     assert_screen 'root-console';
-}
-
-sub switch_to_root_console {
-    send_key 'ctrl-alt-f3';
-}
-
-sub switch_to_x11 {
-    my @hdd = split(/-/, basename get_required_var('HDD_1'));
-    # older openSUSE Tumbleweed has x11 still on tty7
-    # minimalx has x11 on tty7
-    my $x11_tty = ($hdd[3] < 20190617 or check_var('DESKTOP', 'minimalx')) ? 'f7' : 'f2';
-    send_key "ctrl-alt-$x11_tty";
 }
 
 sub handle_gui_password {
@@ -59,7 +46,7 @@ sub wait_for_desktop {
 }
 
 sub login {
-    switch_to_root_console;
+    select_console 'root-console';
     assert_screen 'inst-console';
     type_string "root\n";
     assert_screen 'password-prompt';

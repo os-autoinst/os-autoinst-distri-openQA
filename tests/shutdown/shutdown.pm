@@ -1,11 +1,8 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils qw(switch_to_root_console);
 
 sub run {
-    switch_to_root_console;
-    enter_cmd 'cd';
-    assert_screen 'root-console';
+    select_console 'root-console';
     enter_cmd 'poweroff';
     assert_shutdown 300;
 }
