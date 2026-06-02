@@ -4,7 +4,7 @@ use testapi;
 use utils;
 
 sub run {
-    switch_to_root_console;
+    select_console 'root-console';
     my $profile = '/root/result.xml';
     install_packages('autoyast2 libxml2-tools');
     my $template_path = get_required_var('AUTOYAST');

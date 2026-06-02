@@ -18,7 +18,7 @@ sub run {
     clear_root_console;
     # prepare for next test
     enter_cmd 'logout';
-    switch_to_x11;
+    select_console 'x11';
 }
 
 1;

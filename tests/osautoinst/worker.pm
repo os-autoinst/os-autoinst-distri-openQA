@@ -1,11 +1,10 @@
 use Mojo::Base 'openQAcoretest';
 use testapi;
-use utils qw(wait_for_desktop switch_to_root_console clear_root_console);
+use utils qw(wait_for_desktop clear_root_console);
 
 sub run {
     wait_for_desktop;
-    switch_to_root_console;
-    assert_screen 'inst-console';
+    select_console 'root-console';
     type_string "root\n";
     assert_screen 'password-prompt';
     type_password;
