@@ -4,7 +4,8 @@ use Mojo::Base 'Exporter', -signatures;
 use Exporter;
 use testapi;
 
-our @EXPORT = qw(get_log install_packages clear_root_console wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+our @EXPORT
+  = qw(get_log install_packages clear_root_console wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name", timeout => 300;
@@ -12,8 +13,10 @@ sub get_log ($cmd, $name) {
 }
 
 sub install_packages($packages, $timeout = undef) {
-    $timeout //= 4000; # The maximum of the retry is 3810 seconds
-    assert_script_run(qq{retry -e -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in $packages"}, $timeout);
+    $timeout //= 4000;    # The maximum of the retry is 3810 seconds
+    assert_script_run(
+        qq{retry -e -s 30 -r 7 -- sh -c "zypper -n --gpg-auto-import-keys ref && zypper --no-cd -n in $packages"},
+        $timeout);
 }
 
 sub clear_root_console {
@@ -64,7 +67,9 @@ sub login {
 sub ensure_unlocked_desktop {
     my $counter = 10;
     while ($counter--) {
-        assert_screen [qw(displaymanager displaymanager-password-prompt generic-desktop screenlock gnome-screenlock-password)], no_wait => 1;
+        assert_screen [
+            qw(displaymanager displaymanager-password-prompt generic-desktop screenlock gnome-screenlock-password)],
+          no_wait => 1;
         if (match_has_tag 'displaymanager') {
             if (check_var('DESKTOP', 'minimalx')) {
                 type_string "$username";
@@ -98,8 +103,9 @@ sub ensure_unlocked_desktop {
                 send_key 'esc';    # end screenlock
             };
         }
-        wait_still_screen 2;                                                                              # slow down loop
-        die 'ensure_unlocked_desktop repeated too much. Check for X-server crash.' if ($counter eq 1);    # die loop when generic-desktop not matched
+        wait_still_screen 2;    # slow down loop
+        die 'ensure_unlocked_desktop repeated too much. Check for X-server crash.'
+          if ($counter eq 1);    # die loop when generic-desktop not matched
     }
 }
 
@@ -126,13 +132,15 @@ sub wait_for_container_log ($container, $text, $cmd, $timeout = undef) {
 # https://support.mozilla.org/en-US/kb/customizing-firefox-using-autoconfig
 sub prepare_firefox_autoconfig {
     # Enable AutoConfig by pointing to a cfg file
-    type_string(q{cat <<EOF > $(rpm --eval %_libdir)/firefox/defaults/pref/autoconfig.js
+    type_string(
+        q{cat <<EOF > $(rpm --eval %_libdir)/firefox/defaults/pref/autoconfig.js
 pref("general.config.filename", "firefox.cfg");
 pref("general.config.obscure_value", 0);
 EOF
 });
     # Create AutoConfig cfg file
-    type_string(q{cat <<EOF > $(rpm --eval %_libdir)/firefox/firefox.cfg
+    type_string(
+        q{cat <<EOF > $(rpm --eval %_libdir)/firefox/firefox.cfg
 // Mandatory comment
 // https://firefox-source-docs.mozilla.org/browser/components/newtab/content-src/asrouter/docs/first-run.html
 pref("app.normandy.enabled", false);
@@ -172,7 +180,8 @@ EOF
 sub disable_packagekit {
     diag('Ensure packagekit is not interfering with zypper calls');
     assert_script_run 'systemctl mask --now packagekit';
-    assert_script_run 'sudo -u bernhard gsettings set org.gnome.software download-updates false' if get_var('DESKTOP', 'gnome') eq 'gnome';
+    assert_script_run 'sudo -u bernhard gsettings set org.gnome.software download-updates false'
+      if get_var('DESKTOP', 'gnome') eq 'gnome';
 }
 
 1;

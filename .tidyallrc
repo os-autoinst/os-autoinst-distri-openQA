@@ -1,0 +1,11 @@
+; We split into modules and scripts because the scripts have no file
+; extension, so we detect them by their shebang
+
+[PerlTidy modules]
+select = {lib,t}/**/*.{pl,pm,t}
+argv = --profile=$ROOT/.perltidyrc
+
+[PerlTidy scripts]
+select = tools/* script/*
+argv = --profile=$ROOT/.perltidyrc
+shebang = perl
