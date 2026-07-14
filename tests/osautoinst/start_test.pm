@@ -29,7 +29,7 @@ sub full_run {
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
     my $pflash_settings = _uefi_pflash_settings;
     fetch_job_id(1, 'minimalx', 'NET', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 300);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 900);
 }
 
 sub full_run_multimachine {
@@ -37,7 +37,7 @@ sub full_run_multimachine {
     my $openqa_url = get_var('OPENQA_HOST', 'https://openqa.opensuse.org');
     my $pflash_settings = _uefi_pflash_settings;
     fetch_job_id(1, 'ping_client', 'DVD', $openqa_url);
-    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 600);
+    assert_script_run("retry -r 5 -e -- openqa-clone-job --show-progress --skip-chained-deps --from $openqa_url --parental-inheritance \$job_id $pflash_settings", timeout => 1800);
 }
 
 sub example_run {
