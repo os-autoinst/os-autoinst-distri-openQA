@@ -172,6 +172,10 @@ pref("extensions.ml.enabled", false);
 pref("browser.ml.linkPreview.enabled", false);
 pref("pdfjs.enableAltTextModelDownload", false);
 pref("pdfjs.enableGuessAltText", false);
+// Disable the data submission notification
+// https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/internals/preferences.html
+pref("datareporting.policy.dataSubmissionEnabled", false);
+pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true);
 
 EOF
 });
