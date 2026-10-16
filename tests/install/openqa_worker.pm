@@ -27,14 +27,14 @@ EOF
         assert_script_run sprintf q{if [ -e /etc/openqa/workers.ini ]; then sed -i -e "s/\(\[global\]\)/\1\n%s/" /etc/openqa/workers.ini; else echo -e "[global]\n%s" > /etc/openqa/workers.ini.d/base.ini; fi}, $class, $class;
     }
     assert_script_run sprintf q{echo -e "[global]\n%s" > /etc/openqa/workers.ini.d/enc.ini}, ENCODER_SETTINGS;
-    assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
     my $worker_setup = <<'EOF';
-systemctl status --no-pager os-autoinst-openvswitch
 systemctl enable --now openqa-worker@1
 systemctl status --no-pager openqa-worker@1
 EOF
     assert_script_run($_) foreach (split /\n/, $worker_setup);
     assert_script_run "systemctl enable --now openqa-worker@2" if get_var('FULL_MM_TEST');
+    assert_script_run('os-autoinst-setup-multi-machine', timeout => 120);
+    assert_script_run('systemctl status --no-pager os-autoinst-openvswitch');
     save_screenshot;
     clear_root_console;
 }
