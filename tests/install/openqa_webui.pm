@@ -1,6 +1,6 @@
 use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
-use utils qw(install_packages clear_root_console get_log);
+use utils qw(install_packages clone_openqa_git clear_root_console get_log);
 
 
 sub add_repo {
@@ -51,8 +51,7 @@ sub install_from_pkgs {
 
 sub install_from_git {
     install_packages(q/'rubygem(sass)' git-core perl-App-cpanminus perl-Module-CPANfile perl-YAML-LibYAML postgresql-server apache2 npm/);
-    # The maximum of the retry is 3810 seconds
-    assert_script_run('retry -e -s 30 -r 7 -- git clone https://github.com/os-autoinst/openQA.git', timeout => 4000);
+    clone_openqa_git;
     assert_script_run($_, 600) foreach (split /\n/, <<~'EOF');
     systemctl start postgresql || systemctl status --no-pager postgresql
     su - postgres -c 'createuser root'

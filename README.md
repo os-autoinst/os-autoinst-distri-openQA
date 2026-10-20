@@ -34,6 +34,24 @@ You can then directly modify tests in VSCode and run
 openqa-clone-job url-to-job CASEDIR=$PWD
 ```
 
+## Testing a fork or pull request
+
+The settings that select the installation source can be overridden, e.g. to
+test changes in a fork:
+
+- `OPENQA_OBS_PROJECT` and `OPENQA_REPO_URL` for the package based
+  installation (default `devel:openQA`)
+- `OPENQA_GIT_URL` for the git based installation and container build
+  (default <https://github.com/os-autoinst/openQA.git>), optionally with
+  `#branch` suffix like in `CASEDIR`, e.g.
+  `OPENQA_GIT_URL=https://github.com/myuser/openQA.git#my-feature`
+
+Pass them to `openqa-clone-job`, e.g.
+
+```
+openqa-clone-job --within-instance https://openqa.opensuse.org/tests/XXXX OPENQA_GIT_URL=https://github.com/myuser/openQA.git#my-feature
+```
+
 ## License
 
 This project is licensed under the MIT license.
