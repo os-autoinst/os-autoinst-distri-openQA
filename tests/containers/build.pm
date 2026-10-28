@@ -1,9 +1,9 @@
 use Mojo::Base 'openQAcoretest', -signatures;
 use testapi;
+use utils qw(clone_openqa_git);
 
 sub run {
-    # The maximum of the retry is 3810 seconds
-    assert_script_run('retry -s 30 -r 7 -e -- git clone https://github.com/os-autoinst/openQA.git', timeout => 4000);
+    clone_openqa_git;
     assert_script_run("retry -s 30 -r 7 -e -- bash -o pipefail -c 'docker build openQA/container/$_ -t openqa_$_ --progress=plain 2>&1 | tee docker_build.txt'", timeout => 4000) for qw(webui worker);
     assert_script_run("retry -s 30 -r 7 -e -- bash -o pipefail -c 'docker build openQA/container/openqa_data -t openqa_data --progress=plain 2>&1 | tee docker_build.txt'", timeout => 4000);
 }

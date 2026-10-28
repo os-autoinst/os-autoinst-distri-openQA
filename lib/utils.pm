@@ -5,11 +5,23 @@ use Exporter;
 use testapi;
 
 our @EXPORT
-  = qw(get_log install_packages clear_root_console wait_for_desktop login ensure_unlocked_desktop wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
+  = qw(get_log install_packages clone_openqa_git clear_root_console wait_for_desktop login ensure_unlocked_desktop
+  wait_for_container_log prepare_firefox_autoconfig disable_packagekit);
 
 sub get_log ($cmd, $name) {
     my $ret = script_run "$cmd | tee $name", timeout => 300;
     upload_logs($name) unless $ret;
+}
+
+# Clone the openQA repository into ./openQA, e.g. to install from git.
+# Override OPENQA_GIT_URL to test a fork like https://github.com/myuser/openQA.git.
+# Supports an optional #branch or #ref suffix, e.g.
+# https://github.com/myuser/openQA.git#feature/my_branch.
+sub clone_openqa_git ($timeout = 4000) {
+    my ($url, $branch) = split /#/, get_var('OPENQA_GIT_URL', 'https://github.com/os-autoinst/openQA.git'), 2;
+    my $branch_arg = $branch ? "-b '$branch' " : '';
+    # Explicit destination because a fork can use a different repository name, the maximum of the retry is 3810 seconds
+    assert_script_run(qq{retry -e -s 30 -r 7 -- git clone --depth 1 $branch_arg'$url' openQA}, $timeout);
 }
 
 sub install_packages($packages, $timeout = undef) {
