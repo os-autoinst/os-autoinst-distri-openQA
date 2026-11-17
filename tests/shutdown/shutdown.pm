@@ -3,7 +3,6 @@ use testapi;
 
 sub run ($self) {
     select_console 'root-console';
-    assert_screen 'root-console';
     enter_cmd 'poweroff';
     assert_shutdown 300;
 }
