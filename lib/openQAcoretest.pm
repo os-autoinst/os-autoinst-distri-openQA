@@ -4,7 +4,7 @@ use testapi;
 use utils qw(get_log);
 
 sub post_fail_hook ($self) {
-    select_console 'root-console';
+    select_console 'root-console', await_console => 0;
     send_key 'ctrl-c';    # Stop current command, if any
         # we can't upload logs if the multimachine OVS bridge in the SUT has the same IP as the openQA-worker host
         # This may fail in case this IP is not actually set on the bridge

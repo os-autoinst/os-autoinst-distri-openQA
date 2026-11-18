@@ -61,7 +61,7 @@ sub wait_for_desktop {
 }
 
 sub login {
-    select_console 'root-console';
+    select_console 'root-console', await_console => 0;
     assert_screen 'inst-console';
     type_string "root\n";
     assert_screen 'password-prompt';
